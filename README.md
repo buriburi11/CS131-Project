@@ -1,2 +1,2 @@
 # CS131-Project
-Carlsen Center AI Agent
+Zero Waste Game ADA Compliance Project
