@@ -61,7 +61,7 @@ var timeElapsed = Number(0).toFixed(2);
 
 var chooseButtonSize = 200;
 var originalPlayButtonSize = 100;
-var soundButtonSize = 130;
+var soundButtonSize = 100;
 var currentPlayButtonSize = originalPlayButtonSize;
 var sortButtonSize = 75;
 
@@ -2343,7 +2343,7 @@ function draw()
         {
             drawPauseButton();
             muteButton.x = canvas.width - soundButtonSize - (soundButtonSize/8);
-            muteButton.y = soundButtonSize / 2;
+            muteButton.y = soundButtonSize / 3.7;
             muteButton.size = soundButtonSize;
             drawMuteButton();
         }
