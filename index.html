@@ -34,6 +34,12 @@ document.addEventListener("touchstart", touch2Mouse, true);
 document.addEventListener("touchmove", touch2Mouse, true);
 document.addEventListener("touchend", touch2Mouse, true);
 
+document.addEventListener("keydown", function(e) {
+    if (e.key.toLowerCase() === "m") {
+        toggleMute();
+    }
+});
+
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 var contextScale = 0.68;
@@ -528,6 +534,8 @@ var homeButton = new CircularButton(canvas.width / 3 + originalPlayButtonSize / 
 var muteButton = new CircularButton(canvas.width - soundButtonSize  - soundButtonSize  / 8, soundButtonSize  / 8, soundButtonSize , muteImg);
 
 var images = [];
+
+
 
 function setMatchLevelBoard()
 {
@@ -1694,6 +1702,31 @@ function toggleAudio(x, y)
         muteButton.image = muteImg;
     }
 }
+
+// Toggle M to mute audio
+function toggleMute() {
+    muted = !muted;
+    if (muted) {
+        backgroundMusic.pause();
+        matchingMusic.pause();
+        sortingMusic.pause()
+        muteButton.image = unmuteImg
+        muted = true;
+    } else {
+        // Play the appropriate music for the current state
+        if (currentState === state.PLAYMATCH) {
+            matchingMusic.play();
+        } else if (currentState === state.PLAYSORT) {
+            sortingMusic.play();
+        } else {
+            backgroundMusic.play();
+        }
+        
+        muted = false;
+        muteButton.image = muteImg;
+    }
+}
+
 
 function drawGameBoard()
 {
