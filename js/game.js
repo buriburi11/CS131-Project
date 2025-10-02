@@ -8,12 +8,6 @@ document.addEventListener("touchstart", touch2Mouse, true);
 document.addEventListener("touchmove", touch2Mouse, true);
 document.addEventListener("touchend", touch2Mouse, true);
 
-document.addEventListener("keydown", function(e) {
-    if (e.key.toLowerCase() === "m") {
-        toggleMute();
-    }
-});
-
 
 document.addEventListener("keydown", keyDownHandler, false); //It tells the browser whenever a key is pressed on the keyboard, run my keyDownHandler function.
 
@@ -1835,70 +1829,6 @@ function keyDownHandler(e) {
     }
 }
 
-
-function toggleAudio(x, y)
-{
-    if(muteButton.clicked(x, y) && !muted)
-    {
-        if(currentState == state.PLAYMATCH)
-        {
-            matchingMusic.pause();
-        }
-        else if(currentState == state.PLAYSORT)
-        {
-            sortingMusic.pause();
-        }
-        else
-        {
-            backgroundMusic.pause();
-        }
-
-        muted = true;
-        muteButton.image = unmuteImg;
-    }
-    else if(muteButton.clicked(x, y) && muted)
-    {
-        if(currentState == state.PLAYMATCH)
-        {
-            matchingMusic.play();
-        }
-        else if(currentState == state.PLAYSORT)
-        {
-            sortingMusic.play();
-        }
-        else
-        {
-            backgroundMusic.play();
-        }
-
-        muted = false;
-        muteButton.image = muteImg;
-    }
-}
-
-// Toggle M to mute audio
-function toggleMute() {
-    muted = !muted;
-    if (muted) {
-        backgroundMusic.pause();
-        matchingMusic.pause();
-        sortingMusic.pause()
-        muteButton.image = unmuteImg
-        muted = true;
-    } else {
-        // Play the appropriate music for the current state
-        if (currentState === state.PLAYMATCH) {
-            matchingMusic.play();
-        } else if (currentState === state.PLAYSORT) {
-            sortingMusic.play();
-        } else {
-            backgroundMusic.play();
-        }
-        
-        muted = false;
-        muteButton.image = muteImg;
-    }
-}
 
 
 function drawGameBoard()
