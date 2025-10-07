@@ -1,5 +1,7 @@
-// Asset loader for images and audio
-var loadingImg = image("Images/Screens/loadScreen.png");
+// =====================
+// Image Declarations
+// =====================
+var loadingImg = new Image();
 var mainIntroImg = new Image();
 var welcome1Img = new Image();
 var welcome2Img = new Image();
@@ -15,6 +17,7 @@ var sortingLevelSelectImg = new Image();
 var endScreenSortingImg = new Image();
 var pauseScreenImg = new Image();
 
+// Buttons
 var matchingButtonImg = new Image();
 var sortingButtonImg = new Image();
 var muteImg = new Image();
@@ -27,7 +30,7 @@ var level3Img = new Image();
 var restartButtonImg = new Image();
 var homeButtonImg = new Image();
 
-// matching images
+// Matching game items
 var bananaMatchImg = new Image();
 var bottleMatchImg = new Image();
 var chipsMatchImg = new Image();
@@ -62,10 +65,10 @@ var juiceMatchImg = new Image();
 var eggsMatchImg = new Image();
 var stickMatchImg = new Image();
 var candyMatchImg = new Image();
-var paperRollMatchImg = new Image(); 
+var paperRollMatchImg = new Image();
 var aluminumFoilMatchImg = new Image();
 
-// grayscale versions
+// Sorting grayscale items
 var bananaGSImg = new Image();
 var bottleGSImg = new Image();
 var chipsGSImg = new Image();
@@ -94,11 +97,12 @@ var chineseGSImg = new Image();
 var stickGSImg = new Image();
 var candyGSImg = new Image();
 var poopGSImg = new Image();
-var paperRollGSImg = new Image(); 
+var paperRollGSImg = new Image();
 var paperBagGSImg = new Image();
 var aluminumFoilGSImg = new Image();
-var coffeeLidGSImg = new Image(); 
+var coffeeLidGSImg = new Image();
 
+// Other graphics
 var matchingCardImg = new Image();
 var cardFrontImg = new Image();
 var sortingBackgroundImg = new Image();
@@ -111,141 +115,170 @@ var organicsFrontImg = new Image();
 var landfillBackImg = new Image();
 var landfillFrontImg = new Image();
 
-function loadAssets(){
-    var finishedLoading = function(){
+// =====================
+// Audio
+// =====================
+var backgroundMusic = new Audio();
+var matchingMusic = new Audio();
+var sortingMusic = new Audio();
+var buttonSound = new Audio();
+var tileFlipSound = new Audio();
+var tileMatchSound = new Audio();
+
+// =====================
+// Asset Loader
+// =====================
+var numberLoaded = 0;
+var numberOfAssets = 0; // will count dynamically
+
+function loadAssets() {
+    function track(imgOrAudio, src) {
+        numberOfAssets++;
+        imgOrAudio.onload = finishedLoading;
+        imgOrAudio.oncanplaythrough = finishedLoading; // for audio
+        imgOrAudio.src = src;
+    }
+
+    function finishedLoading() {
         numberLoaded++;
-    };
-    
-    // attach onload callbacks
-    var allImages = [mainIntroImg,welcome1Img,welcome2Img,chooseGameImg,matchingIntro1Img,matchingIntro2Img,matchingIntro3Img,matchingLevelSelectImg,endScreenMatchingImg,sortingIntro1Img,sortingIntro2Img,sortingLevelSelectImg,endScreenSortingImg,pauseScreenImg,matchingButtonImg,sortingButtonImg,muteImg,unmuteImg,pauseButtonImg,playButtonImg,level1Img,level2Img,level3Img,restartButtonImg,homeButtonImg,bananaMatchImg,bottleMatchImg,chipsMatchImg,grassMatchImg,newsPaperMatchImg,paperCupMatchImg,paperTowelsMatchImg,plasticBagMatchImg,strawAndLidMatchImg,appleMatchImg,bonesMatchImg,coffeeLidMatchImg,glassJarMatchImg,mailMatchImg,milkCartonMatchImg,paperPlatesMatchImg,petWasteMatchImg,takeOutBoxMatchImg,paperBagMatchImg,sodaCanMatchImg,brokenPlateMatchImg,canMatchImg,cardboardMatchImg,cerealMatchImg,diaperMatchImg,glassBottleMatchImg,pumpkinMatchImg,styrofoamMatchImg,leafMatchImg,papersMatchImg,juiceMatchImg,eggsMatchImg,stickMatchImg,candyMatchImg,paperRollMatchImg,aluminumFoilMatchImg,bananaGSImg,bottleGSImg,chipsGSImg,newsPaperGSImg,sodaCanGSImg,appleGSImg,brokenPlateGSImg,canGSImg,cardboardGSImg,cerealGSImg,diaperGSImg,glassBottleGSImg,glassJarGSImg,grassGSImg,leafGSImg,mailGSImg,papersGSImg,plasticBagGSImg,pumpkinGSImg,styrofoamGSImg,milkGSImg,juiceGSImg,eggsGSImg,strawGSImg,chineseGSImg,stickGSImg,candyGSImg,poopGSImg,paperRollGSImg,paperBagGSImg,aluminumFoilGSImg,coffeeLidGSImg,matchingCardImg,cardFrontImg,sortingBackgroundImg,paperBackImg,paperFrontImg,comingledBackImg,comingledFrontImg,organicsBackImg,organicsFrontImg,landfillBackImg,landfillFrontImg];
+    }
 
-    allImages.forEach(function(img){ img.onload = finishedLoading; });
+    // =====================
+    // Screens
+    // =====================
+    track(loadingImg, "Images/Screens/loadScreen.png");
+    track(mainIntroImg, "Images/Screens/mainIntro.png");
+    track(welcome1Img, "Images/Screens/welcome1.png");
+    track(welcome2Img, "Images/Screens/welcome2.png");
+    track(chooseGameImg, "Images/Screens/chooseGame.png");
+    track(matchingIntro1Img, "Images/Screens/matchingIntro1.png");
+    track(matchingIntro2Img, "Images/Screens/matchingIntro2.png");
+    track(matchingIntro3Img, "Images/Screens/matchingIntro3.png");
+    track(matchingLevelSelectImg, "Images/Screens/chooseLevelMatching.png");
+    track(endScreenMatchingImg, "Images/Screens/endScreenMatching.png");
+    track(sortingIntro1Img, "Images/Screens/sortingIntro1.png");
+    track(sortingIntro2Img, "Images/Screens/sortingIntro2.png");
+    track(sortingLevelSelectImg, "Images/Screens/chooseLevelSorting.png");
+    track(endScreenSortingImg, "Images/Screens/endScreenSorting.png");
+    track(pauseScreenImg, "Images/Screens/pauseScreen.png");
 
-    // set sources
-    mainIntroImg.src = "Images/Screens/mainIntro.png";
-    welcome1Img.src = "Images/Screens/welcome1.png";
-    welcome2Img.src = "Images/Screens/welcome2.png";
-    chooseGameImg.src = "Images/Screens/chooseGame.png";
-    matchingIntro1Img.src = "Images/Screens/matchingIntro1.png";
-    matchingIntro2Img.src = "Images/Screens/matchingIntro2.png";
-    matchingIntro3Img.src = "Images/Screens/matchingIntro3.png";
-    matchingLevelSelectImg.src = "Images/Screens/chooseLevelMatching.png";
-    endScreenMatchingImg.src = "Images/Screens/endScreenMatching.png";
-    sortingIntro1Img.src = "Images/Screens/sortingIntro1.png";
-    sortingIntro2Img.src = "Images/Screens/sortingIntro2.png";
-    sortingLevelSelectImg.src = "Images/Screens/chooseLevelSorting.png";
-    endScreenSortingImg.src = "Images/Screens/endScreenSorting.png";
-    pauseScreenImg.src = "Images/Screens/pauseScreen.png";
-    matchingButtonImg.src = "Images/Buttons/matchingButton.png";
-    sortingButtonImg.src = "Images/Buttons/sortingButton.png";
-    muteImg.src = "Images/Buttons/muteButton.png";
-    unmuteImg.src = "Images/Buttons/unmuteButton.png";
-    pauseButtonImg.src = "Images/Buttons/pauseButton.png";
-    playButtonImg.src = "Images/Buttons/playButton.png";
-    level1Img.src = "Images/Buttons/level1.png";
-    level2Img.src = "Images/Buttons/level2.png";
-    level3Img.src = "Images/Buttons/level3.png";
-    restartButtonImg.src = "Images/Buttons/restartButton.png";
-    homeButtonImg.src = "Images/Buttons/homeButton.png";
+    // =====================
+    // Buttons
+    // =====================
+    track(matchingButtonImg, "Images/Buttons/matchingButton.png");
+    track(sortingButtonImg, "Images/Buttons/sortingButton.png");
+    track(muteImg, "Images/Buttons/muteButton.png");
+    track(unmuteImg, "Images/Buttons/unmuteButton.png");
+    track(pauseButtonImg, "Images/Buttons/pauseButton.png");
+    track(playButtonImg, "Images/Buttons/playButton.png");
+    track(level1Img, "Images/Buttons/level1.png");
+    track(level2Img, "Images/Buttons/level2.png");
+    track(level3Img, "Images/Buttons/level3.png");
+    track(restartButtonImg, "Images/Buttons/restartButton.png");
+    track(homeButtonImg, "Images/Buttons/homeButton.png");
 
-    bananaMatchImg.src = "Images/Clear/bananaPeelClr.png";
-    bottleMatchImg.src = "Images/Clear/bottleClr.png";
-    chipsMatchImg.src = "Images/Clear/chipsClr.png";
-    grassMatchImg.src = "Images/Clear/grassClr.png";
-    newsPaperMatchImg.src = "Images/Clear/newsPaperClr.png";
-    paperCupMatchImg.src = "Images/Clear/paperCupClr.png";
-    paperTowelsMatchImg.src = "Images/Clear/paperTowelsClr.png";
-    plasticBagMatchImg.src = "Images/Clear/plasticBagClr.png";
-    strawAndLidMatchImg.src = "Images/Clear/StrawAndLidClr.png";
-    appleMatchImg.src = "Images/Clear/appleClr.png";
-    bonesMatchImg.src = "Images/Clear/bonesClr.png";
-    coffeeLidMatchImg.src = "Images/Clear/coffeeLidClr.png";
-    glassJarMatchImg.src = "Images/Clear/glassJarClr.png";
-    mailMatchImg.src = "Images/Clear/mailClr.png";
-    milkCartonMatchImg.src = "Images/Clear/milkCartonClr.png";
-    paperPlatesMatchImg.src = "Images/Clear/paperPlatesClr.png";
-    petWasteMatchImg.src = "Images/Clear/petWasteClr.png";
-    takeOutBoxMatchImg.src = "Images/Clear/takeOutClr.png";
-    paperBagMatchImg.src = "Images/Clear/paperBagClr.png";
-    sodaCanMatchImg.src = "Images/Clear/sodaCanClr.png";
-    brokenPlateMatchImg.src = "Images/Clear/brokenPlateClr.png";
-    canMatchImg.src = "Images/Clear/canClr.png";
-    cardboardMatchImg.src = "Images/Clear/cardboardClr.png";
-    cerealMatchImg.src = "Images/Clear/cerealClr.png";
-    diaperMatchImg.src = "Images/Clear/diaperClr.png";
-    glassBottleMatchImg.src = "Images/Clear/glassBottleClr.png";
-    pumpkinMatchImg.src = "Images/Clear/pumpkinClr.png";
-    styrofoamMatchImg.src = "Images/Clear/styrofoamClr.png";
-    leafMatchImg.src = "Images/Clear/leafClr.png";
-    papersMatchImg.src = "Images/Clear/papersClr.png";
-    juiceMatchImg.src = "Images/Clear/juiceBoxClr.png";
-    eggsMatchImg.src = "Images/Clear/eggCartonClr.png";
-    stickMatchImg.src = "Images/Clear/stickClr.png";
-    candyMatchImg.src = "Images/Clear/candyBarClr.png";
-    paperRollMatchImg.src = "Images/Clear/paperRollClr.png"; 
-    aluminumFoilMatchImg.src = "Images/Clear/aluminumFoilClr.png";
+    // =====================
+    // Matching (Clear) Items
+    // =====================
+    track(bananaMatchImg, "Images/Clear/bananaPeelClr.png");
+    track(bottleMatchImg, "Images/Clear/bottleClr.png");
+    track(chipsMatchImg, "Images/Clear/chipsClr.png");
+    track(grassMatchImg, "Images/Clear/grassClr.png");
+    track(newsPaperMatchImg, "Images/Clear/newsPaperClr.png");
+    track(paperCupMatchImg, "Images/Clear/paperCupClr.png");
+    track(paperTowelsMatchImg, "Images/Clear/paperTowelsClr.png");
+    track(plasticBagMatchImg, "Images/Clear/plasticBagClr.png");
+    track(strawAndLidMatchImg, "Images/Clear/StrawAndLidClr.png");
+    track(appleMatchImg, "Images/Clear/appleClr.png");
+    track(bonesMatchImg, "Images/Clear/bonesClr.png");
+    track(coffeeLidMatchImg, "Images/Clear/coffeeLidClr.png");
+    track(glassJarMatchImg, "Images/Clear/glassJarClr.png");
+    track(mailMatchImg, "Images/Clear/mailClr.png");
+    track(milkCartonMatchImg, "Images/Clear/milkCartonClr.png");
+    track(paperPlatesMatchImg, "Images/Clear/paperPlatesClr.png");
+    track(petWasteMatchImg, "Images/Clear/petWasteClr.png");
+    track(takeOutBoxMatchImg, "Images/Clear/takeOutClr.png");
+    track(paperBagMatchImg, "Images/Clear/paperBagClr.png");
+    track(sodaCanMatchImg, "Images/Clear/sodaCanClr.png");
+    track(brokenPlateMatchImg, "Images/Clear/brokenPlateClr.png");
+    track(canMatchImg, "Images/Clear/canClr.png");
+    track(cardboardMatchImg, "Images/Clear/cardboardClr.png");
+    track(cerealMatchImg, "Images/Clear/cerealClr.png");
+    track(diaperMatchImg, "Images/Clear/diaperClr.png");
+    track(glassBottleMatchImg, "Images/Clear/glassBottleClr.png");
+    track(pumpkinMatchImg, "Images/Clear/pumpkinClr.png");
+    track(styrofoamMatchImg, "Images/Clear/styrofoamClr.png");
+    track(leafMatchImg, "Images/Clear/leafClr.png");
+    track(papersMatchImg, "Images/Clear/papersClr.png");
+    track(juiceMatchImg, "Images/Clear/juiceBoxClr.png");
+    track(eggsMatchImg, "Images/Clear/eggCartonClr.png");
+    track(stickMatchImg, "Images/Clear/stickClr.png");
+    track(candyMatchImg, "Images/Clear/candyBarClr.png");
+    track(paperRollMatchImg, "Images/Clear/paperRollClr.png");
+    track(aluminumFoilMatchImg, "Images/Clear/aluminumFoilClr.png");
 
-    bananaGSImg.src = "Images/Grayscale/bananaPeelGS.png";
-    bottleGSImg.src = "Images/Grayscale/bottleGS.png";
-    chipsGSImg.src = "Images/Grayscale/chipsGS.png";
-    newsPaperGSImg.src = "Images/Grayscale/newsPaperGS.png";
-    sodaCanGSImg.src = "Images/Grayscale/sodaCanGS.png";
-    appleGSImg.src = "Images/Grayscale/appleGS.png";
-    brokenPlateGSImg.src = "Images/Grayscale/brokenPlateGS.png";
-    canGSImg.src = "Images/Grayscale/canGS.png";
-    cardboardGSImg.src = "Images/Grayscale/cardboardGS.png";
-    cerealGSImg.src = "Images/Grayscale/cerealGS.png";
-    diaperGSImg.src = "Images/Grayscale/diaperGS.png";
-    glassBottleGSImg.src = "Images/Grayscale/glassBottleGS.png";
-    glassJarGSImg.src = "Images/Grayscale/glassJarGS.png";
-    grassGSImg.src = "Images/Grayscale/grassGS.png";
-    leafGSImg.src = "Images/Grayscale/leafGS.png";
-    mailGSImg.src = "Images/Grayscale/mailGS.png";
-    papersGSImg.src = "Images/Grayscale/papersGS.png";
-    plasticBagGSImg.src = "Images/Grayscale/plasticBagGS.png";
-    pumpkinGSImg.src = "Images/Grayscale/pumpkinGS.png";
-    styrofoamGSImg.src = "Images/Grayscale/styrofoamGS.png";
-    milkGSImg.src = "Images/Grayscale/milkCartonGS.png";
-    juiceGSImg.src = "Images/Grayscale/juiceBoxGS.png";
-    eggsGSImg.src = "Images/Grayscale/eggCartonGS.png";
-    strawGSImg.src = "Images/Grayscale/StrawAndLidGS.png";
-    chineseGSImg.src = "Images/Grayscale/takeOutGS.png";
-    stickGSImg.src = "Images/Grayscale/stickGS.png";
-    candyGSImg.src = "Images/Grayscale/candyBarGS.png";
-    poopGSImg.src = "Images/Grayscale/petWasteGS.png";
-    paperRollGSImg.src = "Images/Grayscale/paperRollGS.png"; 
-    paperBagGSImg.src = "Images/Grayscale/paperBagGS.png";
-    aluminumFoilGSImg.src = "Images/Grayscale/aluminumFoilGS.png";
-    coffeeLidGSImg.src = "Images/Grayscale/coffeeLidGS.png"; 
-    matchingCardImg.src = "Images/Other/matchingCard.png";
-    cardFrontImg.src = "Images/Other/cardFront.png";
-    sortingBackgroundImg.src = "Images/Other/sortingBackground.png";
-    paperBackImg.src = "Images/Other/paperBack.png";
-    paperFrontImg.src = "Images/Other/paperFront.png";
-    comingledBackImg.src = "Images/Other/comingledBack.png";
-    comingledFrontImg.src = "Images/Other/comingledFront.png";
-    organicsBackImg.src = "Images/Other/organicsBack.png";
-    organicsFrontImg.src = "Images/Other/organicsFront.png";
-    landfillBackImg.src = "Images/Other/landfillBack.png";
-    landfillFrontImg.src = "Images/Other/landfillFront.png";
+    // =====================
+    // Sorting (Grayscale) Items
+    // =====================
+    track(bananaGSImg, "Images/Grayscale/bananaPeelGS.png");
+    track(bottleGSImg, "Images/Grayscale/bottleGS.png");
+    track(chipsGSImg, "Images/Grayscale/chipsGS.png");
+    track(newsPaperGSImg, "Images/Grayscale/newsPaperGS.png");
+    track(sodaCanGSImg, "Images/Grayscale/sodaCanGS.png");
+    track(appleGSImg, "Images/Grayscale/appleGS.png");
+    track(brokenPlateGSImg, "Images/Grayscale/brokenPlateGS.png");
+    track(canGSImg, "Images/Grayscale/canGS.png");
+    track(cardboardGSImg, "Images/Grayscale/cardboardGS.png");
+    track(cerealGSImg, "Images/Grayscale/cerealGS.png");
+    track(diaperGSImg, "Images/Grayscale/diaperGS.png");
+    track(glassBottleGSImg, "Images/Grayscale/glassBottleGS.png");
+    track(glassJarGSImg, "Images/Grayscale/glassJarGS.png");
+    track(grassGSImg, "Images/Grayscale/grassGS.png");
+    track(leafGSImg, "Images/Grayscale/leafGS.png");
+    track(mailGSImg, "Images/Grayscale/mailGS.png");
+    track(papersGSImg, "Images/Grayscale/papersGS.png");
+    track(plasticBagGSImg, "Images/Grayscale/plasticBagGS.png");
+    track(pumpkinGSImg, "Images/Grayscale/pumpkinGS.png");
+    track(styrofoamGSImg, "Images/Grayscale/styrofoamGS.png");
+    track(milkGSImg, "Images/Grayscale/milkCartonGS.png");
+    track(juiceGSImg, "Images/Grayscale/juiceBoxGS.png");
+    track(eggsGSImg, "Images/Grayscale/eggCartonGS.png");
+    track(strawGSImg, "Images/Grayscale/StrawAndLidGS.png");
+    track(chineseGSImg, "Images/Grayscale/takeOutGS.png");
+    track(stickGSImg, "Images/Grayscale/stickGS.png");
+    track(candyGSImg, "Images/Grayscale/candyBarGS.png");
+    track(poopGSImg, "Images/Grayscale/petWasteGS.png");
+    track(paperRollGSImg, "Images/Grayscale/paperRollGS.png");
+    track(paperBagGSImg, "Images/Grayscale/paperBagGS.png");
+    track(aluminumFoilGSImg, "Images/Grayscale/aluminumFoilGS.png");
+    track(coffeeLidGSImg, "Images/Grayscale/coffeeLidGS.png");
 
-    //Audio
-    backgroundMusic.loop = true;   
-    backgroundMusic.src = "Sound/bgMusic.mp3";
+    // =====================
+    // Other Graphics
+    // =====================
+    track(matchingCardImg, "Images/Other/matchingCard.png");
+    track(cardFrontImg, "Images/Other/cardFront.png");
+    track(sortingBackgroundImg, "Images/Other/sortingBackground.png");
+    track(paperBackImg, "Images/Other/paperBack.png");
+    track(paperFrontImg, "Images/Other/paperFront.png");
+    track(comingledBackImg, "Images/Other/comingledBack.png");
+    track(comingledFrontImg, "Images/Other/comingledFront.png");
+    track(organicsBackImg, "Images/Other/organicsBack.png");
+    track(organicsFrontImg, "Images/Other/organicsFront.png");
+    track(landfillBackImg, "Images/Other/landfillBack.png");
+    track(landfillFrontImg, "Images/Other/landfillFront.png");
+
+    // =====================
+    // Audio
+    // =====================
+    backgroundMusic.loop = true;
+    track(backgroundMusic, "Sound/bgMusic.mp3");
     matchingMusic.loop = true;
-    matchingMusic.src = "Sound/matchingMusic.mp3";
+    track(matchingMusic, "Sound/matchingMusic.mp3");
     sortingMusic.loop = true;
-    sortingMusic.src = "Sound/sortingMusic.mp3";
-    buttonSound.src = "Sound/buttonPop.mp3";
-    tileFlipSound.src = "Sound/swish.mp3";
-    tileMatchSound.src = "Sound/ding.mp3";
+    track(sortingMusic, "Sound/sortingMusic.mp3");
+    track(buttonSound, "Sound/buttonPop.mp3");
+    track(tileFlipSound, "Sound/swish.mp3");
+    track(tileMatchSound, "Sound/ding.mp3");
 }
 
-function image(imageSrc)
-{
-    var image = new Image();
-
-    image.src = imageSrc;
-
-    return image;
-}
