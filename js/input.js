@@ -15,6 +15,15 @@ function registerInputListeners(){
         }
     });
 
+    // Map Escape to pause/unpause toggle
+    document.addEventListener("keydown", function(e) {
+        if (e.key === "Escape" || e.key === "Esc") {
+            // Prevent default to avoid closing dialogs or exiting fullscreen unexpectedly
+            e.preventDefault();
+            if (typeof togglePause === 'function') togglePause();
+        }
+    });
+
     document.addEventListener("keydown", keyDownHandler, false);
 }
 
