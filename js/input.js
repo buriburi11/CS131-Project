@@ -4,6 +4,44 @@ function keyDownHandler(e) {
         e.preventDefault(); // stops the browser from scrolling when these keys are pressed
     }
 
+    // Number keys for Level Select (1, 2, 3) 
+    if (
+    (currentState === state.MATCHLEVEL || currentState === state.SORTLEVEL) &&
+    ["1","2","3"].includes(e.key)
+    ) {
+        // choose which level button to "click"
+        const btn =
+          e.key === "1" ? level1Button :
+          e.key === "2" ? level2Button :
+          level3Button;
+
+        // simulate a mouse click at the center of that button
+        const clickX = canvas.offsetLeft + btn.x + (btn.width / 2);
+        const clickY = canvas.offsetTop  + btn.y + (btn.height / 2);
+
+        e.preventDefault();
+        clickHandler({ pageX: clickX, pageY: clickY });
+        return;
+    }
+
+    // Arrow keys to choose game on "Choose Game" screen
+    if (currentState === state.CHOOSEGAME) {
+        if (e.key === "ArrowLeft") {
+            // Simulate click on Matching button
+            const clickX = canvas.offsetLeft + matchingButton.x + matchingButton.width / 2;
+            const clickY = canvas.offsetTop + matchingButton.y + matchingButton.height / 2;
+            clickHandler({ pageX: clickX, pageY: clickY });
+            return;
+        }
+        if (e.key === "ArrowRight") {
+            // Simulate click on Sorting button
+            const clickX = canvas.offsetLeft + sortingButton.x + sortingButton.width / 2;
+            const clickY = canvas.offsetTop + sortingButton.y + sortingButton.height / 2;
+            clickHandler({ pageX: clickX, pageY: clickY });
+            return;
+        }
+    }
+
     //Only handle keyboard input when we are playing the Matching game and the timer is not paused
     if (currentState == state.PLAYMATCH && !timer.isPaused()) {
         // use row/col math to keep movement tidy
@@ -228,4 +266,70 @@ document.addEventListener("keydown", function(e) {
         e.preventDefault();
         if (typeof togglePause === 'function') togglePause();
     }
+});
+
+// Map P key to: (1) unpause when paused, (2) "click" the Play button on intro screens
+document.addEventListener("keydown", function (e) {
+    if ((e.key || "").toLowerCase() !== "p") return;
+        e.preventDefault();
+
+    // 1) If we’re in a play state and currently paused, P should unpause (same as clicking the big Play icon)
+    if (
+        (currentState === state.PLAYMATCH || currentState === state.PLAYSORT) &&
+        typeof timer !== "undefined" &&
+        timer.isPaused() &&
+        typeof togglePause === "function"
+    ) {
+        togglePause();
+        return;
+    }
+
+    // 2) Otherwise, if we’re on a screen that shows the round Play button, P should "click" it
+    if (
+    currentState === state.MAININTRO ||
+    currentState === state.WELCOME1 ||
+    currentState === state.WELCOME2 ||
+    currentState === state.MATCHINTRO1 ||
+    currentState === state.MATCHINTRO2 ||
+    currentState === state.MATCHINTRO3 ||
+    currentState === state.SORTINTRO1 ||
+    currentState === state.SORTINTRO2
+    ) {
+        // Click the center of the circular Play button so the hit test passes
+        const clickX = canvas.offsetLeft + playButton.x + playButton.size / 2;
+        const clickY = canvas.offsetTop  + playButton.y + playButton.size / 2;
+        clickHandler({ pageX: clickX, pageY: clickY });
+    }
+});
+
+// Map R to "Restart" and H to "Home"
+document.addEventListener("keydown", function (e) {
+  const key = (e.key || "").toLowerCase();
+  if (key !== "r" && key !== "h") return;
+
+  // Only act when those buttons are visible:
+  //  - Paused during play (PLAYMATCH or PLAYSORT)
+  //  - OR on the END screen
+  const onPauseScreen = (currentState === state.PLAYMATCH || currentState === state.PLAYSORT) && typeof timer !== "undefined" && timer.isPaused();
+  const onEndScreen = currentState === state.END;
+
+  if (!onPauseScreen && !onEndScreen) return;
+
+  e.preventDefault();
+
+  if (key === "r") {
+    // simulate a click in the center of the Restart button
+    const clickX = canvas.offsetLeft + restartButton.x + (restartButton.size / 2);
+    const clickY = canvas.offsetTop  + restartButton.y + (restartButton.size / 2);
+    clickHandler({ pageX: clickX, pageY: clickY });
+    return;
+  }
+
+  if (key === "h") {
+    // simulate a click in the center of the Home button
+    const clickX = canvas.offsetLeft + homeButton.x + (homeButton.size / 2);
+    const clickY = canvas.offsetTop  + homeButton.y + (homeButton.size / 2);
+    clickHandler({ pageX: clickX, pageY: clickY });
+    return;
+  }
 });

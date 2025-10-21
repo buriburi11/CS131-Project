@@ -279,8 +279,14 @@ function clickHandler(e)
 
             currentState = state.MATCHINTRO2;
 
+            /*
             playButton.x = canvas.width / 2 - originalPlayButtonSize / 2;
             playButton.y = canvas.height / 2 + canvas.height / 4 - originalPlayButtonSize - originalPlayButtonSize / 8;
+            */
+
+            //position for MatchingIntro2 only (move to the left of the bubble)
+            playButton.x = canvas.width / 2 - canvas.width / 3 - originalPlayButtonSize / 2; 
+            playButton.y = canvas.height / 2 - canvas.height / 14 - originalPlayButtonSize;
             playButton.size = originalPlayButtonSize;
             currentPlayButtonSize = originalPlayButtonSize;
             increasePlayButtonSize = true;
