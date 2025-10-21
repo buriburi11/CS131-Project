@@ -12,6 +12,7 @@ Sprint 3:
     We’ve added more keyboard functionality:
     Player can use the H key returns to the home screen,
     The R key restarts the game,
+    Keys 1,2,3 for the level slection screen,
     and Left and Right arrow keys let players choose between Matching and Sorting games on the game selection screen.
     With these updates, the game is now fully playable using just the keyboard.
     However, as players, it’s not obvious that these controls exist — there’s no text instruction on-screen to guide them.
