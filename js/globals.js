@@ -56,6 +56,7 @@ var tileFlipSound = new Audio();
 var tileMatchSound = new Audio();
 
 var muted = false;
+var globalVolume = 1.0; // Default volume (max)
 
 // variables used by both games
 var numberLoaded = 0;
