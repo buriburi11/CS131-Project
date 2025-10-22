@@ -1704,7 +1704,7 @@ function draw()
 
                     if (garbage[i].type != landfill) {
                         recyclingSorted++;
-                        scorePercentage = Number(recyclingSorted / startingGarbageCount * 100).toFixed(0);
+                        scorePercentage = Number((recyclingSorted+landfillSorted) / startingGarbageCount * 100).toFixed(0);
                     } else {
                         landfillSorted++;
                     }
@@ -1830,7 +1830,7 @@ function draw()
 
                         if (garbage[i].type != landfill) {
                             recyclingSorted++;
-                            scorePercentage = Number(recyclingSorted / startingGarbageCount * 100).toFixed(0);
+                            scorePercentage = Number((recyclingSorted+landfillSorted) / startingGarbageCount * 100).toFixed(0);
                         } else {
                             landfillSorted++;
                         }

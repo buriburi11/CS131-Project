@@ -134,3 +134,8 @@ var muted = false;
 var images = [];
 var activeGarbage = null; // currently controlled garbage item
 var keyboardMode = true;  // one-item-at-a-time mode
+
+
+//sorting game anti-spam mechanic
+var ANTI_SPAM_Y_THRESHOLD_RATIO = 0.60;
+var ANTI_SPAM_RESET_OFFSET_PX = 120;

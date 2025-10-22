@@ -2178,16 +2178,16 @@ function changeChooseButtonSize()
 {
     if(chooseButtonSize < 250 && increaseChooseButtonSize)
     {
-        chooseButtonSize += 1;
+        chooseButtonSize += 0.25;
 
-        matchingButton.x -= 0.5;
-        matchingButton.y -= 0.5;
+        matchingButton.x -= 0.125;
+        matchingButton.y -= 0.125;
 
         matchingButton.width = chooseButtonSize;
         matchingButton.height = chooseButtonSize;
 
-        sortingButton.x -= 0.5;
-        sortingButton.y -= 0.5;
+        sortingButton.x -= 0.125;
+        sortingButton.y -= 0.125;
 
         sortingButton.width = chooseButtonSize;
         sortingButton.height = chooseButtonSize;
@@ -2199,16 +2199,16 @@ function changeChooseButtonSize()
     }
     else
     {
-        chooseButtonSize -= 1;
+        chooseButtonSize -= 0.25;
 
-        matchingButton.x += 0.5;
-        matchingButton.y += 0.5;
+        matchingButton.x += 0.125;
+        matchingButton.y += 0.125;
 
         matchingButton.width = chooseButtonSize;
         matchingButton.height = chooseButtonSize;
 
-        sortingButton.x += 0.5;
-        sortingButton.y += 0.5;
+        sortingButton.x += 0.125;
+        sortingButton.y += 0.125;
 
         sortingButton.width = chooseButtonSize;
         sortingButton.height = chooseButtonSize;
@@ -2224,10 +2224,10 @@ function changePlayButtonSize()
 {
     if(currentPlayButtonSize < 125 && increasePlayButtonSize)
     {
-        currentPlayButtonSize += 0.5;
+        currentPlayButtonSize += 0.125;
 
-        playButton.x -= 0.25;
-        playButton.y -= 0.25;
+        playButton.x -= 0.0625;
+        playButton.y -= 0.0625;
 
         playButton.size = currentPlayButtonSize;
 
@@ -2238,10 +2238,10 @@ function changePlayButtonSize()
     }
     else
     {
-        currentPlayButtonSize -= 0.5;
+        currentPlayButtonSize -= 0.125;
 
-        playButton.x += 0.25;
-        playButton.y += 0.25;
+        playButton.x += 0.0625;
+        playButton.y += 0.0625;
 
         playButton.size = currentPlayButtonSize;
 
@@ -2256,26 +2256,26 @@ function changeLevelButtonSize()
 {
     if(levelButtonWidth < 150 && increaseLevelButtonSize)
     {
-        levelButtonWidth += 0.5;
-        levelButtonHeight += 0.2;
+        levelButtonWidth += 0.125;
+        levelButtonHeight += 0.05;
 
         level1Button.width = levelButtonWidth;
         level1Button.height = levelButtonHeight;
 
-        level1Button.x -= 0.25;
-        level1Button.y -= 0.1;
+        level1Button.x -= 0.0625;
+        level1Button.y -= 0.025;
 
         level2Button.width = levelButtonWidth;
         level2Button.height = levelButtonHeight;
 
-        level2Button.x -= 0.25;
-        level2Button.y -= 0.1;
+        level2Button.x -= 0.0625;
+        level2Button.y -= 0.025;
 
         level3Button.width = levelButtonWidth;
         level3Button.height = levelButtonHeight;
 
-        level3Button.x -= 0.25;
-        level3Button.y -= 0.1;
+        level3Button.x -= 0.0625;
+        level3Button.y -= 0.025;
 
         if(levelButtonWidth >= 150)
         {
@@ -2284,26 +2284,26 @@ function changeLevelButtonSize()
     }
     else
     {
-        levelButtonWidth -= 0.5;
-        levelButtonHeight -= 0.2;
+        levelButtonWidth -= 0.125;
+        levelButtonHeight -= 0.05;
 
         level1Button.width = levelButtonWidth;
         level1Button.height = levelButtonHeight;
 
-        level1Button.x += 0.25;
-        level1Button.y += 0.1;
+        level1Button.x += 0.0625;
+        level1Button.y += 0.025;
 
         level2Button.width = levelButtonWidth;
         level2Button.height = levelButtonHeight;
 
-        level2Button.x += 0.25;
-        level2Button.y += 0.1;
+        level2Button.x += 0.0625;
+        level2Button.y += 0.025;
 
         level3Button.width = levelButtonWidth;
         level3Button.height = levelButtonHeight;
 
-        level3Button.x += 0.25;
-        level3Button.y += 0.1;
+        level3Button.x += 0.0625;
+        level3Button.y += 0.025;
 
         if(levelButtonWidth <= 125)
         {
@@ -2316,15 +2316,15 @@ function changeRestartAndHomeButtonSize()
 {
     if(currentPlayButtonSize < 125 && increasePlayButtonSize)
     {
-        currentPlayButtonSize += 0.5;
+        currentPlayButtonSize += 0.125;
 
-        restartButton.x -= 0.25;
-        restartButton.y -= 0.25;
+        restartButton.x -= 0.0625;
+        restartButton.y -= 0.0625;
 
         restartButton.size = currentPlayButtonSize;
 
-        homeButton.x -= 0.25;
-        homeButton.y -= 0.25;
+        homeButton.x -= 0.0625;
+        homeButton.y -= 0.0625;
 
         homeButton.size = currentPlayButtonSize;
 
@@ -2335,15 +2335,15 @@ function changeRestartAndHomeButtonSize()
     }
     else
     {
-        currentPlayButtonSize -= 0.5;
+        currentPlayButtonSize -= 0.125;
 
-        restartButton.x += 0.25;
-        restartButton.y += 0.25;
+        restartButton.x += 0.0625;
+        restartButton.y += 0.0625;
 
         restartButton.size = currentPlayButtonSize;
 
-        homeButton.x += 0.25;
-        homeButton.y += 0.25;
+        homeButton.x += 0.0625;
+        homeButton.y += 0.0625;
 
         homeButton.size = currentPlayButtonSize;
 
@@ -2569,7 +2569,7 @@ function draw()
                 if(garbage[i].type != landfill)
                 {
                     recyclingSorted++;
-                    scorePercentage = Number(recyclingSorted / startingGarbageCount * 100).toFixed(0);
+                    scorePercentage = Number((recyclingSorted+landfillSorted) / startingGarbageCount * 100).toFixed(0);
                 }
                 else
                 {

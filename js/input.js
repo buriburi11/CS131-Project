@@ -251,9 +251,19 @@ function keyDownHandler(e) {
             activeGarbage.x = targetX;
             activeGarbage.falling = true;
 
+            var binTopY = canvas.height - binFrontHeight - garbageSize;
+            var thresholdY = canvas.height * ANTI_SPAM_Y_THRESHOLD_RATIO; // default 85%
+
+             if ((activeGarbage.y + activeGarbage.size) >= thresholdY)
+             {
+                var bump = ANTI_SPAM_RESET_OFFSET_PX; // default 120px
+                activeGarbage.y = Math.max(-garbageSize, binTopY - bump);
+                activeGarbage.falling = true; // keep it falling after the bump
+             }
+
             // only release control if the choice was correct
             if (activeGarbage.type === targetType) {
-                activeGarbage = null;
+                //activeGarbage = null;
             }
         }
     }
