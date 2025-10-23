@@ -21,3 +21,8 @@ However, as players, it’s not obvious that these controls exist — there’s 
 Update: the level selection sprites have been updated for better instruction to the user, progress bar now correctly increments to 100% instead of 75%, pulse speed of all icons has been set to 25% across the board, and the queue system in the sorting game now only drops the next item if the current one is sorted along with a fairness mechanic on all of the bin-sorting buttons.
 So for Sprint 4, our goal is to design and implement an on-screen introduction that explains the keyboard controls, making the game more accessible for all players.
 
+For our next sprint, we’re planning to finish adding the on-screen instructions for all the keyboard controls, so players can easily see which keys they can use during the game.
+We’ll also make the timer optional — players will be able to turn it off if they prefer a more relaxed experience.
+Another improvement we’re planning is to make the game screen adjustable, so it can switch to full-screen mode. We might also add a toggle key to make it easier to turn on or off.
+Lastly, we’ll add both a volume slider and a brightness slider, so players can customize their audio and visual experience.
+
