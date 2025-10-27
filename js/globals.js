@@ -46,8 +46,8 @@ var soundButtonSize = 100;
 var currentPlayButtonSize = originalPlayButtonSize;
 var sortButtonSize = 75;
 
-var levelButtonWidth = 125;
-var levelButtonHeight = 50;
+var levelButtonWidth = 150;
+var levelButtonHeight = 80;
 
 var increaseChooseButtonSize = true;
 var increasePlayButtonSize = true;

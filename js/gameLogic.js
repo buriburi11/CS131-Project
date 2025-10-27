@@ -331,13 +331,13 @@ function clickHandler(e)
             currentState = state.MATCHLEVEL;
 
             level1Button.x = canvas.width / 4 - levelButtonWidth / 2 - levelButtonWidth;
-            level1Button.y = canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2;
+            level1Button.y = canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2 + 20;
 
             level2Button.x = canvas.width / 4;
-            level2Button.y = canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2;
+            level2Button.y = canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2 + 20;
 
             level3Button.x = canvas.width / 4 + levelButtonWidth / 2 + levelButtonWidth;
-            level3Button.y = canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2;
+            level3Button.y = canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2 + 20;
         }
 
         toggleAudio(x, y);
