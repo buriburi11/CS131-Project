@@ -1,3 +1,5 @@
+
+
 // Canvas and Context
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
@@ -44,7 +46,7 @@ var chooseButtonSize = 200;
 var originalPlayButtonSize = 100;
 var soundButtonSize = 100;
 var currentPlayButtonSize = originalPlayButtonSize;
-var sortButtonSize = 75;
+var sortButtonSize = 93;
 
 var levelButtonWidth = 150;
 var levelButtonHeight = 80;

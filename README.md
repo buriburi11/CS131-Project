@@ -26,3 +26,10 @@ We’ll also make the timer optional — players will be able to turn it off if 
 Another improvement we’re planning is to make the game screen adjustable, so it can switch to full-screen mode. We might also add a toggle key to make it easier to turn on or off.
 Lastly, we’ll add both a volume slider and a brightness slider, so players can customize their audio and visual experience.
 
+
+Sprint 4:
+Now, the game is fully playable using only the keyboard, so players don’t need a mouse at all.
+We also added clear on-screen instructions to guide players through each game and show all the keyboard controls.
+In addition, we implemented a volume slider so players can easily adjust the sound level while playing.
+For our next sprint, we plan to make the game screen adjustable, so it can switch to full-screen mode. 
+And we might also add a brightness slider to make the visuals more comfortable for players.
