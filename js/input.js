@@ -216,7 +216,7 @@ function keyDownHandler(e) {
 
                         //Reset flip counter after delay
                         setTimeout(() => {
-                            displayMatchInfo = false;   // hide info popup
+                            displayMatchInfo = true;   // hide info popup
                             timer.update();          // advance the timer
                             timer.endMatchDelay();   // request to end delay
                             timer.update();          // commit the change
