@@ -4,6 +4,15 @@ function keyDownHandler(e) {
         e.preventDefault(); // stops the browser from scrolling when these keys are pressed
     }
 
+    // 🔹 Allow keyboard to exit the match info pause (auto or keypress)
+    if (currentState === state.PLAYMATCH && timer.isMatchDelayed()) {
+        timer.endMatchDelay();
+        timer.update();
+        displayMatchInfo = false;
+        numberTilesFlipped = 0;
+        return; // stop further key handling until resumed
+    }
+    
     // Number keys for Level Select (1, 2, 3) 
     if (
     (currentState === state.MATCHLEVEL || currentState === state.SORTLEVEL) &&
@@ -207,10 +216,11 @@ function keyDownHandler(e) {
 
                         //Reset flip counter after delay
                         setTimeout(() => {
-                        timer.update();          // advance the timer
-                        timer.endMatchDelay();   // request to end delay
-                        timer.update();          // commit the change
-                        numberTilesFlipped = 0;  // reset flips
+                            displayMatchInfo = false;   // hide info popup
+                            timer.update();          // advance the timer
+                            timer.endMatchDelay();   // request to end delay
+                            timer.update();          // commit the change
+                            numberTilesFlipped = 0;  // reset flips
                         }, timer.matchDelayDuration + 10); // small buffer helps timing
 
                     }else {
