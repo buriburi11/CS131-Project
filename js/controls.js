@@ -216,3 +216,74 @@ function changeRestartAndHomeButtonSize() {
         }
     }
 }
+
+function togglePause() {
+    // Only toggle when in an active play state
+    if(currentState == state.PLAYMATCH)
+    {
+        // Don't toggle during match/end delays or after finishing
+        if(score == tiles.length * 50 / 2) return;
+
+        if(!timer.isPaused() && !timer.isMatchDelayed() && !timer.isEndDelayed())
+        {
+            if(!muted)
+            {
+                buttonSound.load();
+                buttonSound.play();
+            }
+
+            timer.pause();
+            pauseButton.image = playButtonImg;
+            pauseButton.x = canvas.width / 2 - originalPlayButtonSize * 2 - originalPlayButtonSize / 4;
+            pauseButton.y = canvas.height / 2 - originalPlayButtonSize / 2 - originalPlayButtonSize / 8;
+        }
+        else if(!timer.isMatchDelayed() && !timer.isEndDelayed())
+        {
+            if(!muted)
+            {
+                buttonSound.load();
+                buttonSound.play();
+            }
+
+            timer.unpause();
+            pauseButton.image = pauseButtonImg;
+            pauseButton.x = canvas.width - originalPlayButtonSize * 2;
+            pauseButton.y = canvas.height - originalPlayButtonSize - 15;
+        }
+    }
+    else if(currentState == state.PLAYSORT)
+    {
+        if(itemsRemaining < 1) return;
+
+        if(!timer.isPaused())
+        {
+            if(!muted)
+            {
+                buttonSound.load();
+                buttonSound.play();
+            }
+
+            timer.pause();
+            pauseButton.image = playButtonImg;
+            pauseButton.x = canvas.width / 2 - originalPlayButtonSize * 2 - originalPlayButtonSize / 4;
+            pauseButton.y = canvas.height / 2 - originalPlayButtonSize / 2 - originalPlayButtonSize / 8;
+            pauseButton.size = originalPlayButtonSize;
+        }
+        else
+        {
+            if(!muted)
+            {
+                buttonSound.load();
+                buttonSound.play();
+            }
+
+            timer.unpause();
+            pauseButton.image = pauseButtonImg;
+            pauseButton.x = sidebarLocalXOrigin + (binWidth*(1/8));
+            pauseButton.y = canvas.height * (7/16);
+            pauseButton.size = sortButtonSize;
+        }
+    }
+}
+
+

@@ -1,3 +1,516 @@
+document.addEventListener("mousedown", clickHandler, false);
+
+document.addEventListener("mousedown", mouseDownHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
+document.addEventListener("mouseup", mouseUpHandler, false);
+
+document.addEventListener("touchstart", touch2Mouse, true);
+document.addEventListener("touchmove", touch2Mouse, true);
+document.addEventListener("touchend", touch2Mouse, true);
+
+
+document.addEventListener("keydown", keyDownHandler, false); //It tells the browser whenever a key is pressed on the keyboard, run my keyDownHandler function.
+
+
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+var contextScale = 0.68;
+//ctx.scale(contextScale,contextScale);
+
+var state = {WELCOME1: 0, WELCOME2: 1, CHOOSEGAME: 2, MATCHINTRO1: 3, MATCHINTRO2: 4, MATCHINTRO3: 5, MATCHLEVEL: 6, PLAYMATCH: 7, END: 8, SORTINTRO1: 9, SORTINTRO2: 10, SORTLEVEL: 11, PLAYSORT: 12, MAININTRO: 13, LOADING: 14};
+
+var currentState = state.LOADING;
+
+var mouseDown = false;
+
+var percent;
+var timerBarHeight = 30;
+var timerBarWidth = 0;
+
+var score = 0;
+
+var level;
+
+var gameTitle;
+
+var timer = new Timer();
+var timerTime;
+var timeElapsed = Number(0).toFixed(2);
+
+var chooseButtonSize = 200;
+var originalPlayButtonSize = 100;
+var soundButtonSize = 100;
+var currentPlayButtonSize = originalPlayButtonSize;
+var sortButtonSize = 75;
+
+var levelButtonWidth = 125;
+var levelButtonHeight = 50;
+
+var increaseChooseButtonSize = true;
+var increasePlayButtonSize = true;
+var increaseLevelButtonSize = true;
+
+var tileRowCount;
+var tileColumnCount;
+var tileSize;
+var tilePadding;
+var tileOffsetTop;
+var tileOffsetLeft;
+
+var tiles;
+
+var focusedTileIndex = 0;   // Which tile is currently focused
+
+var backgroundMusic = new Audio();
+var matchingMusic = new Audio();
+
+var sortingMusic = new Audio();
+
+var buttonSound = new Audio();
+var tileFlipSound = new Audio();
+var tileMatchSound = new Audio();
+
+var muted = false;
+
+var loadingImg = image("Images/Screens/loadScreen.png");
+var mainIntroImg = new Image();
+var welcome1Img = new Image();
+var welcome2Img = new Image();
+var chooseGameImg = new Image();
+var matchingIntro1Img = new Image();
+var matchingIntro2Img = new Image();
+var matchingIntro3Img = new Image();
+var matchingLevelSelectImg = new Image();
+var endScreenMatchingImg = new Image();
+var sortingIntro1Img = new Image();
+var sortingIntro2Img = new Image();
+var sortingLevelSelectImg = new Image();
+var endScreenSortingImg = new Image();
+var pauseScreenImg = new Image();
+
+var matchingButtonImg = new Image();
+var sortingButtonImg = new Image();
+var muteImg = new Image();
+var unmuteImg = new Image();
+var pauseButtonImg = new Image();
+var playButtonImg = new Image();
+var level1Img = new Image();
+var level2Img = new Image();
+var level3Img = new Image();
+var restartButtonImg = new Image();
+var homeButtonImg = new Image();
+
+var bananaMatchImg = new Image();
+var bottleMatchImg = new Image();
+var chipsMatchImg = new Image();
+var grassMatchImg = new Image();
+var newsPaperMatchImg = new Image();
+var paperCupMatchImg = new Image();
+var paperTowelsMatchImg = new Image();
+var plasticBagMatchImg = new Image();
+var strawAndLidMatchImg = new Image();
+var appleMatchImg = new Image();
+var bonesMatchImg = new Image();
+var coffeeLidMatchImg = new Image();
+var glassJarMatchImg = new Image();
+var mailMatchImg = new Image();
+var milkCartonMatchImg = new Image();
+var paperPlatesMatchImg = new Image();
+var petWasteMatchImg = new Image();
+var takeOutBoxMatchImg = new Image();
+var paperBagMatchImg = new Image();
+var sodaCanMatchImg = new Image();
+var brokenPlateMatchImg = new Image();
+var canMatchImg = new Image();
+var cardboardMatchImg = new Image();
+var cerealMatchImg = new Image();
+var diaperMatchImg = new Image();
+var glassBottleMatchImg = new Image();
+var pumpkinMatchImg = new Image();
+var styrofoamMatchImg = new Image();
+var leafMatchImg = new Image();
+var papersMatchImg = new Image();
+var juiceMatchImg = new Image();
+var eggsMatchImg = new Image();
+var stickMatchImg = new Image();
+var candyMatchImg = new Image();
+var paperRollMatchImg = new Image(); 
+var paperBagMatchImg = new Image();
+var aluminumFoilMatchImg = new Image();
+
+var bananaGSImg = new Image();
+var bottleGSImg = new Image();
+var chipsGSImg = new Image();
+var newsPaperGSImg = new Image();
+var sodaCanGSImg = new Image();
+var appleGSImg = new Image();
+var brokenPlateGSImg = new Image();
+var canGSImg = new Image();
+var cardboardGSImg = new Image();
+var cerealGSImg = new Image();
+var diaperGSImg = new Image();
+var glassBottleGSImg = new Image();
+var glassJarGSImg = new Image();
+var grassGSImg = new Image();
+var leafGSImg = new Image();
+var mailGSImg = new Image();
+var papersGSImg = new Image();
+var plasticBagGSImg = new Image();
+var pumpkinGSImg = new Image();
+var styrofoamGSImg = new Image();
+var milkGSImg = new Image();
+var juiceGSImg = new Image();
+var eggsGSImg = new Image();
+var strawGSImg = new Image();
+var chineseGSImg = new Image();
+var stickGSImg = new Image();
+var candyGSImg = new Image();
+var poopGSImg = new Image();
+var paperRollGSImg = new Image(); 
+var paperBagGSImg = new Image();
+var aluminumFoilGSImg = new Image();
+var coffeeLidGSImg = new Image(); 
+
+var matchingCardImg = new Image();
+var cardFrontImg = new Image();
+var sortingBackgroundImg = new Image();
+var paperBackImg = new Image();
+var paperFrontImg = new Image();
+var comingledBackImg = new Image();
+var comingledFrontImg = new Image();
+var organicsBackImg = new Image();
+var organicsFrontImg = new Image();
+var landfillBackImg = new Image();
+var landfillFrontImg = new Image();
+  
+
+var numberLoaded = 0;
+var numberOfAssets = 104;
+
+function loadAssets(){
+    
+    var finishedLoading = function(){
+        numberLoaded++;
+    };
+    
+    //Images
+    mainIntroImg.onload = finishedLoading;
+    welcome1Img.onload = finishedLoading;
+    welcome2Img.onload = finishedLoading;
+    chooseGameImg.onload = finishedLoading;
+    matchingIntro1Img.onload = finishedLoading;
+    matchingIntro2Img.onload = finishedLoading;
+    matchingIntro3Img.onload = finishedLoading;
+    matchingLevelSelectImg.onload = finishedLoading;
+    endScreenMatchingImg.onload = finishedLoading;
+    sortingIntro1Img.onload = finishedLoading;
+    sortingIntro2Img.onload = finishedLoading;
+    sortingLevelSelectImg.onload = finishedLoading;
+    endScreenSortingImg.onload = finishedLoading;
+    pauseScreenImg.onload = finishedLoading;
+    
+    matchingButtonImg.onload = finishedLoading;
+    sortingButtonImg.onload = finishedLoading;
+    muteImg.onload = finishedLoading;
+    unmuteImg.onload = finishedLoading;
+    pauseButtonImg.onload = finishedLoading;
+    playButtonImg.onload = finishedLoading;
+    level1Img.onload = finishedLoading;
+    level2Img.onload = finishedLoading;
+    level3Img.onload = finishedLoading;
+    restartButtonImg.onload = finishedLoading;
+    homeButtonImg.onload = finishedLoading;
+    
+    bananaMatchImg.onload = finishedLoading;
+    bottleMatchImg.onload = finishedLoading;
+    chipsMatchImg.onload = finishedLoading;
+    grassMatchImg.onload = finishedLoading;
+    newsPaperMatchImg.onload = finishedLoading;
+    paperCupMatchImg.onload = finishedLoading;
+    paperTowelsMatchImg.onload = finishedLoading;
+    plasticBagMatchImg.onload = finishedLoading;
+    strawAndLidMatchImg.onload = finishedLoading;
+    appleMatchImg.onload = finishedLoading;
+    bonesMatchImg.onload = finishedLoading;
+    coffeeLidMatchImg.onload = finishedLoading;
+    glassJarMatchImg.onload = finishedLoading;
+    mailMatchImg.onload = finishedLoading;
+    milkCartonMatchImg.onload = finishedLoading;
+    paperPlatesMatchImg.onload = finishedLoading;
+    petWasteMatchImg.onload = finishedLoading;
+    takeOutBoxMatchImg.onload = finishedLoading;
+    paperBagMatchImg.onload = finishedLoading;
+    sodaCanMatchImg.onload = finishedLoading;
+    brokenPlateMatchImg.onload = finishedLoading;
+    canMatchImg.onload = finishedLoading;
+    cardboardMatchImg.onload = finishedLoading;
+    cerealMatchImg.onload = finishedLoading;
+    diaperMatchImg.onload = finishedLoading;
+    glassBottleMatchImg.onload = finishedLoading;
+    pumpkinMatchImg.onload = finishedLoading;
+    styrofoamMatchImg.onload = finishedLoading;
+    leafMatchImg.onload = finishedLoading;
+    papersMatchImg.onload = finishedLoading;
+    juiceMatchImg.onload = finishedLoading;
+    eggsMatchImg.onload = finishedLoading;
+    stickMatchImg.onload = finishedLoading;
+    candyMatchImg.onload = finishedLoading;
+    paperRollMatchImg.onload = finishedLoading; 
+    paperBagMatchImg.onload = finishedLoading;
+    aluminumFoilMatchImg.onload = finishedLoading;
+
+    bananaGSImg.onload = finishedLoading;
+    bottleGSImg.onload = finishedLoading;
+    chipsGSImg.onload = finishedLoading;
+    newsPaperGSImg.onload = finishedLoading;
+    sodaCanGSImg.onload = finishedLoading;
+    appleGSImg.onload = finishedLoading;
+    brokenPlateGSImg.onload = finishedLoading;
+    canGSImg.onload = finishedLoading;
+    cardboardGSImg.onload = finishedLoading;
+    cerealGSImg.onload = finishedLoading;
+    diaperGSImg.onload = finishedLoading;
+    glassBottleGSImg.onload = finishedLoading;
+    glassJarGSImg.onload = finishedLoading;
+    grassGSImg.onload = finishedLoading;
+    leafGSImg.onload = finishedLoading;
+    mailGSImg.onload = finishedLoading;
+    papersGSImg.onload = finishedLoading;
+    plasticBagGSImg.onload = finishedLoading;
+    pumpkinGSImg.onload = finishedLoading;
+    styrofoamGSImg.onload = finishedLoading;
+    milkGSImg.onload = finishedLoading;
+    juiceGSImg.onload = finishedLoading;
+    eggsGSImg.onload = finishedLoading;
+    strawGSImg.onload = finishedLoading;
+    chineseGSImg.onload = finishedLoading;
+    stickGSImg.onload = finishedLoading;
+    candyGSImg.onload = finishedLoading;
+    poopGSImg.onload = finishedLoading;
+    paperRollGSImg.onload = finishedLoading;
+    paperBagGSImg.onload = finishedLoading;
+    aluminumFoilGSImg.onload = finishedLoading;
+    coffeeLidGSImg.onload = finishedLoading;
+    
+    matchingCardImg.onload = finishedLoading;
+    cardFrontImg.onload = finishedLoading;
+    sortingBackgroundImg.onload = finishedLoading;
+    paperBackImg.onload = finishedLoading;
+    paperFrontImg.onload = finishedLoading;
+    comingledBackImg.onload = finishedLoading;
+    comingledFrontImg.onload = finishedLoading;
+    organicsBackImg.onload = finishedLoading;
+    organicsFrontImg.onload = finishedLoading;
+    landfillBackImg.onload = finishedLoading;
+    landfillFrontImg.onload = finishedLoading;
+    
+    mainIntroImg.src = "Images/Screens/mainIntro.png";
+    welcome1Img.src = "Images/Screens/welcome1.png";
+    welcome2Img.src = "Images/Screens/welcome2.png";
+    chooseGameImg.src = "Images/Screens/chooseGame.png";
+    matchingIntro1Img.src = "Images/Screens/matchingIntro1.png";
+    matchingIntro2Img.src = "Images/Screens/matchingIntro2.png";
+    matchingIntro3Img.src = "Images/Screens/matchingIntro3.png";
+    matchingLevelSelectImg.src = "Images/Screens/chooseLevelMatching.png";
+    endScreenMatchingImg.src = "Images/Screens/endScreenMatching.png";
+    sortingIntro1Img.src = "Images/Screens/sortingIntro1.png";
+    sortingIntro2Img.src = "Images/Screens/sortingIntro2.png";
+    sortingLevelSelectImg.src = "Images/Screens/chooseLevelSorting.png";
+    endScreenSortingImg.src = "Images/Screens/endScreenSorting.png";
+    pauseScreenImg.src = "Images/Screens/pauseScreen.png";
+    
+    matchingButtonImg.src = "Images/Buttons/matchingButton.png";
+    sortingButtonImg.src = "Images/Buttons/sortingButton.png";
+    muteImg.src = "Images/Buttons/muteButton.png";
+    unmuteImg.src = "Images/Buttons/unmuteButton.png";
+    pauseButtonImg.src = "Images/Buttons/pauseButton.png";
+    playButtonImg.src = "Images/Buttons/playButton.png";
+    level1Img.src = "Images/Buttons/level1.png";
+    level2Img.src = "Images/Buttons/level2.png";
+    level3Img.src = "Images/Buttons/level3.png";
+    restartButtonImg.src = "Images/Buttons/restartButton.png";
+    homeButtonImg.src = "Images/Buttons/homeButton.png";
+    
+    bananaMatchImg.src = "Images/Clear/bananaPeelClr.png";
+    bottleMatchImg.src = "Images/Clear/bottleClr.png";
+    chipsMatchImg.src = "Images/Clear/chipsClr.png";
+    grassMatchImg.src = "Images/Clear/grassClr.png";
+    newsPaperMatchImg.src = "Images/Clear/newsPaperClr.png";
+    paperCupMatchImg.src = "Images/Clear/paperCupClr.png";
+    paperTowelsMatchImg.src = "Images/Clear/paperTowelsClr.png";
+    plasticBagMatchImg.src = "Images/Clear/plasticBagClr.png";
+    strawAndLidMatchImg.src = "Images/Clear/StrawAndLidClr.png";
+    appleMatchImg.src = "Images/Clear/appleClr.png";
+    bonesMatchImg.src = "Images/Clear/bonesClr.png";
+    coffeeLidMatchImg.src = "Images/Clear/coffeeLidClr.png";
+    glassJarMatchImg.src = "Images/Clear/glassJarClr.png";
+    mailMatchImg.src = "Images/Clear/mailClr.png";
+    milkCartonMatchImg.src = "Images/Clear/milkCartonClr.png";
+    paperPlatesMatchImg.src = "Images/Clear/paperPlatesClr.png";
+    petWasteMatchImg.src = "Images/Clear/petWasteClr.png";
+    takeOutBoxMatchImg.src = "Images/Clear/takeOutClr.png";
+    paperBagMatchImg.src = "Images/Clear/paperBagClr.png";
+    sodaCanMatchImg.src = "Images/Clear/sodaCanClr.png";
+    brokenPlateMatchImg.src = "Images/Clear/brokenPlateClr.png";
+    canMatchImg.src = "Images/Clear/canClr.png";
+    cardboardMatchImg.src = "Images/Clear/cardboardClr.png";
+    cerealMatchImg.src = "Images/Clear/cerealClr.png";
+    diaperMatchImg.src = "Images/Clear/diaperClr.png";
+    glassBottleMatchImg.src = "Images/Clear/glassBottleClr.png";
+    pumpkinMatchImg.src = "Images/Clear/pumpkinClr.png";
+    styrofoamMatchImg.src = "Images/Clear/styrofoamClr.png";
+    leafMatchImg.src = "Images/Clear/leafClr.png";
+    papersMatchImg.src = "Images/Clear/papersClr.png";
+    juiceMatchImg.src = "Images/Clear/juiceBoxClr.png";
+    eggsMatchImg.src = "Images/Clear/eggCartonClr.png";
+    stickMatchImg.src = "Images/Clear/stickClr.png";
+    candyMatchImg.src = "Images/Clear/candyBarClr.png";
+    paperRollMatchImg.src = "Images/Clear/paperRollClr.png"; 
+    paperBagMatchImg.src = "Images/Clear/paperBagClr.png";
+    aluminumFoilMatchImg.src = "Images/Clear/aluminumFoilClr.png";
+
+    bananaGSImg.src = "Images/Grayscale/bananaPeelGS.png";
+    bottleGSImg.src = "Images/Grayscale/bottleGS.png";
+    chipsGSImg.src = "Images/Grayscale/chipsGS.png";
+    newsPaperGSImg.src = "Images/Grayscale/newsPaperGS.png";
+    sodaCanGSImg.src = "Images/Grayscale/sodaCanGS.png";
+    appleGSImg.src = "Images/Grayscale/appleGS.png";
+    brokenPlateGSImg.src = "Images/Grayscale/brokenPlateGS.png";
+    canGSImg.src = "Images/Grayscale/canGS.png";
+    cardboardGSImg.src = "Images/Grayscale/cardboardGS.png";
+    cerealGSImg.src = "Images/Grayscale/cerealGS.png";
+    diaperGSImg.src = "Images/Grayscale/diaperGS.png";
+    glassBottleGSImg.src = "Images/Grayscale/glassBottleGS.png";
+    glassJarGSImg.src = "Images/Grayscale/glassJarGS.png";
+    grassGSImg.src = "Images/Grayscale/grassGS.png";
+    leafGSImg.src = "Images/Grayscale/leafGS.png";
+    mailGSImg.src = "Images/Grayscale/mailGS.png";
+    papersGSImg.src = "Images/Grayscale/papersGS.png";
+    plasticBagGSImg.src = "Images/Grayscale/plasticBagGS.png";
+    pumpkinGSImg.src = "Images/Grayscale/pumpkinGS.png";
+    styrofoamGSImg.src = "Images/Grayscale/styrofoamGS.png";
+    milkGSImg.src = "Images/Grayscale/milkCartonGS.png";
+    juiceGSImg.src = "Images/Grayscale/juiceBoxGS.png";
+    eggsGSImg.src = "Images/Grayscale/eggCartonGS.png";
+    strawGSImg.src = "Images/Grayscale/StrawAndLidGS.png";
+    chineseGSImg.src = "Images/Grayscale/takeOutGS.png";
+    stickGSImg.src = "Images/Grayscale/stickGS.png";
+    candyGSImg.src = "Images/Grayscale/candyBarGS.png";
+    poopGSImg.src = "Images/Grayscale/petWasteGS.png";
+    paperRollGSImg.src = "Images/Grayscale/paperRollGS.png"; 
+    paperBagGSImg.src = "Images/Grayscale/paperBagGS.png";
+    aluminumFoilGSImg.src = "Images/Grayscale/aluminumFoilGS.png";
+    coffeeLidGSImg.src = "Images/Grayscale/coffeeLidGS.png"; 
+    
+    matchingCardImg.src = "Images/Other/matchingCard.png";
+    cardFrontImg.src = "Images/Other/cardFront.png";
+    sortingBackgroundImg.src = "Images/Other/sortingBackground.png";
+    paperBackImg.src = "Images/Other/paperBack.png";
+    paperFrontImg.src = "Images/Other/paperFront.png";
+    comingledBackImg.src = "Images/Other/comingledBack.png";
+    comingledFrontImg.src = "Images/Other/comingledFront.png";
+    organicsBackImg.src = "Images/Other/organicsBack.png";
+    organicsFrontImg.src = "Images/Other/organicsFront.png";
+    landfillBackImg.src = "Images/Other/landfillBack.png";
+    landfillFrontImg.src = "Images/Other/landfillFront.png";
+    
+    //Audio
+    backgroundMusic.loop = true;   
+    backgroundMusic.src = "Sound/bgMusic.mp3";
+    matchingMusic.loop = true;
+    matchingMusic.src = "Sound/matchingMusic.mp3";
+    sortingMusic.loop = true;
+    sortingMusic.src = "Sound/sortingMusic.mp3";
+    buttonSound.src = "Sound/buttonPop.mp3";
+    tileFlipSound.src = "Sound/swish.mp3";
+    tileMatchSound.src = "Sound/ding.mp3";
+}
+
+var dragImg;
+var dragX;
+var dragY;
+var dragOffsetX;
+var dragOffsetY;
+var draggedGarbage = new Garbage(0, 0, 0, 0, 0);
+
+var binWidth = 960 / 5;
+var binBackHeight = 25;
+var binFrontHeight = 100;
+
+var sidebarLocalXOrigin = canvas.width - binWidth;
+var sidebarWidth = binWidth;
+var sidebarButtonSize = 60;
+
+var garbageSize = 75;
+
+var paper = 0;
+var comingled = 1;
+var organics = 2;
+var landfill = 3;
+
+var recyclingSorted = 0;
+var landfillSorted = 0;
+var scorePercentage = 0;
+
+var paperColumnStart = 0;
+var comingledColumnStart = binWidth;
+var organicsColumnStart = binWidth * 2;
+var landfillColumnStart = binWidth * 3;
+
+var paperColumnEnd = paperColumnStart + binWidth;
+var comingledColumnEnd = comingledColumnStart + binWidth;
+var organicsColumnEnd = organicsColumnStart + binWidth;
+var landfillColumnEnd = landfillColumnStart + binWidth;
+
+var displayMatchInfo;
+var matchInfoImage;
+var matchInfoString1;
+var matchInfoString2;
+
+var imageIndex;
+var numberTilesFlipped;
+var firstFlippedTileIndex;
+var secondFlippedTileIndex;
+
+var timerCircleRadius = 60;
+var startAngle = -(Math.PI / 2);
+var endAngle = 0;
+
+var fallSpeed;
+var dropGarbageInterval;
+var lastDropTime;
+
+var garbage = [];
+var garbageQueue = [];
+
+var startingGarbageCount;
+var itemsRemaining;
+
+var matchingButton = new RectangularButton(canvas.width / 4 - chooseButtonSize / 2, canvas.height / 4 - chooseButtonSize / 2, chooseButtonSize, chooseButtonSize, matchingButtonImg);
+
+var sortingButton = new RectangularButton(canvas.width / 2 + canvas.width / 4 - chooseButtonSize / 2, canvas.height / 4 - chooseButtonSize / 2, chooseButtonSize, chooseButtonSize, sortingButtonImg);
+
+var playButton = new CircularButton(canvas.width / 2 - originalPlayButtonSize - originalPlayButtonSize / 2, canvas.height / 2 + canvas.height / 4 - originalPlayButtonSize / 2, originalPlayButtonSize, playButtonImg);
+console.log("Canvas Width: " + canvas.width);
+
+var level1Button = new RectangularButton(canvas.width / 4 - levelButtonWidth / 2 - levelButtonWidth, canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2, levelButtonWidth, levelButtonHeight, level1Img);
+
+var level2Button = new RectangularButton(canvas.width / 4, canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2, levelButtonWidth, levelButtonHeight, level2Img);
+
+var level3Button = new RectangularButton(canvas.width / 4 + levelButtonWidth / 2 + levelButtonWidth, canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2, levelButtonWidth, levelButtonHeight, level3Img);
+
+var pauseButton = new CircularButton(canvas.width - (originalPlayButtonSize * 2), canvas.height - originalPlayButtonSize - 15, originalPlayButtonSize, pauseButtonImg);
+
+var restartButton = new CircularButton(canvas.width / 4 - originalPlayButtonSize / 2, canvas.height / 2 + canvas.height / 4 - originalPlayButtonSize / 2, originalPlayButtonSize, restartButtonImg);
+
+var homeButton = new CircularButton(canvas.width / 3 + originalPlayButtonSize / 2, canvas.height / 2 + canvas.height / 4 - originalPlayButtonSize / 2, originalPlayButtonSize, homeButtonImg);
+
+var muteButton = new CircularButton(canvas.width - soundButtonSize  - soundButtonSize  / 8, soundButtonSize  / 8, soundButtonSize , muteImg);
+
+var images = [];
+
+
+
 function setMatchLevelBoard()
 {
     tiles = [];
@@ -11,7 +524,7 @@ function setMatchLevelBoard()
 
     if(level == 1)
     {
-        timerTime = 85000;
+        timerTime = 60000;
         tileRowCount = 3;
         tileColumnCount = 6;
         tileSize = 120;
@@ -24,7 +537,7 @@ function setMatchLevelBoard()
 
     if(level == 2)
     {
-        timerTime = 130000;
+        timerTime = 75000;
         tileRowCount = 3;
         tileColumnCount = 8;
         tileSize = 95;
@@ -37,7 +550,7 @@ function setMatchLevelBoard()
 
     if(level == 3)
     {
-        timerTime = 200000;
+        timerTime = 90000;
         tileRowCount = 4;
         tileColumnCount = 8;
         tileSize = 90;
@@ -69,7 +582,7 @@ function setSortLevelBoard()
 {
     if(level == 1)
     {
-        timerTime = 100000;
+        timerTime = 60000;
         dropGarbageInterval = 2000;
         garbageQueue = [new Garbage(getRandomPaperX(), -garbageSize, garbageSize, newsPaperMatchImg, paper), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, cardboardMatchImg, paper), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, cerealMatchImg, paper), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, mailMatchImg, paper), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, bottleMatchImg, comingled), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, sodaCanMatchImg, comingled), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, canMatchImg, comingled), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, glassBottleMatchImg, comingled), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, bananaMatchImg, organics), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, appleMatchImg, organics), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, grassMatchImg, organics), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, pumpkinMatchImg, organics), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, chipsMatchImg, landfill), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, brokenPlateMatchImg, landfill), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, diaperMatchImg, landfill), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, plasticBagMatchImg, landfill)];
         garbageQueue.sort(function(a, b){return 0.5 - Math.random();});
@@ -77,7 +590,7 @@ function setSortLevelBoard()
 
     if(level == 2)
     {
-        timerTime = 150000;
+        timerTime = 60000;
         dropGarbageInterval = 1500;
         garbageQueue = [new Garbage(getRandomPaperX(), -garbageSize, garbageSize, newsPaperMatchImg, paper), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, cardboardMatchImg, paper), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, cerealMatchImg, paper), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, mailMatchImg, paper), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, bottleMatchImg, comingled), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, sodaCanMatchImg, comingled), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, canMatchImg, comingled), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, glassBottleMatchImg, comingled), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, bananaMatchImg, organics), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, appleMatchImg, organics), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, grassMatchImg, organics), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, pumpkinMatchImg, organics), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, chipsMatchImg, landfill), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, brokenPlateMatchImg, landfill), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, diaperMatchImg, landfill), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, plasticBagMatchImg, landfill), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, eggsMatchImg, paper), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, papersMatchImg, paper), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, strawAndLidMatchImg, comingled), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, glassJarMatchImg, comingled), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, milkCartonMatchImg, organics), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, leafMatchImg, organics), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, juiceMatchImg, landfill), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, styrofoamMatchImg, landfill)];
         garbageQueue.sort(function(a, b){return 0.5 - Math.random();});
@@ -85,7 +598,7 @@ function setSortLevelBoard()
 
     if(level == 3)
     {
-        timerTime = 250000;
+        timerTime = 60000;
         dropGarbageInterval = 1000;
         garbageQueue = [new Garbage(getRandomPaperX(), -garbageSize, garbageSize, newsPaperMatchImg, paper), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, cardboardMatchImg, paper), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, cerealMatchImg, paper), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, mailMatchImg, paper), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, bottleMatchImg, comingled), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, sodaCanMatchImg, comingled), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, canMatchImg, comingled), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, glassBottleMatchImg, comingled), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, bananaMatchImg, organics), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, appleMatchImg, organics), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, grassMatchImg, organics), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, pumpkinMatchImg, organics), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, chipsMatchImg, landfill), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, brokenPlateMatchImg, landfill), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, diaperMatchImg, landfill), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, plasticBagMatchImg, landfill), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, eggsMatchImg, paper), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, papersMatchImg, paper), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, strawAndLidMatchImg, comingled), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, glassJarMatchImg, comingled), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, milkCartonMatchImg, organics), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, leafMatchImg, organics), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, juiceMatchImg, landfill), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, styrofoamMatchImg, landfill), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, paperRollMatchImg, paper), new Garbage(getRandomPaperX(), -garbageSize, garbageSize, paperBagMatchImg, paper), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, aluminumFoilMatchImg, comingled), new Garbage(getRandomComingledX(), -garbageSize, garbageSize, coffeeLidMatchImg, comingled), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, stickMatchImg, organics), new Garbage(getRandomOrganicsX(), -garbageSize, garbageSize, takeOutBoxMatchImg, organics), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, petWasteMatchImg, landfill), new Garbage(getRandomLandfillX(), -garbageSize, garbageSize, candyMatchImg, landfill)];
         garbageQueue.sort(function(a, b){return 0.5 - Math.random();});
@@ -100,25 +613,23 @@ function setSortLevelBoard()
     startingGarbageCount = garbageQueue.length;
     itemsRemaining = startingGarbageCount;
     gameTitle = "sorting";
-
-    // Spawn first item immediately in keyboard mode
-    if (keyboardMode && garbageQueue.length > 0) {
-        activeGarbage = garbageQueue.pop();
-        activeGarbage.x = canvas.width / 2 - garbageSize / 2;
-        activeGarbage.y = -garbageSize;
-        garbage.push(activeGarbage);
-    }
 }
 
-function image(imageSrc) {
+function image(imageSrc)
+{
     var image = new Image();
+
     image.src = imageSrc;
+
     return image;
 }
 
-function getRandomPaperX() {
+function getRandomPaperX()
+{
     var min = binWidth;
     var max = canvas.width - binWidth - garbageSize;
+    min = Math.ceil(min);
+    max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
@@ -279,14 +790,8 @@ function clickHandler(e)
 
             currentState = state.MATCHINTRO2;
 
-            /*
             playButton.x = canvas.width / 2 - originalPlayButtonSize / 2;
             playButton.y = canvas.height / 2 + canvas.height / 4 - originalPlayButtonSize - originalPlayButtonSize / 8;
-            */
-
-            //position for MatchingIntro2 only (move to the left of the bubble)
-            playButton.x = canvas.width / 2 - canvas.width / 3 - originalPlayButtonSize / 2; 
-            playButton.y = canvas.height / 2 - canvas.height / 14 - originalPlayButtonSize;
             playButton.size = originalPlayButtonSize;
             currentPlayButtonSize = originalPlayButtonSize;
             increasePlayButtonSize = true;
@@ -331,13 +836,13 @@ function clickHandler(e)
             currentState = state.MATCHLEVEL;
 
             level1Button.x = canvas.width / 4 - levelButtonWidth / 2 - levelButtonWidth;
-            level1Button.y = canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2 + 20;
+            level1Button.y = canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2;
 
             level2Button.x = canvas.width / 4;
-            level2Button.y = canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2 + 20;
+            level2Button.y = canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2;
 
             level3Button.x = canvas.width / 4 + levelButtonWidth / 2 + levelButtonWidth;
-            level3Button.y = canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2 + 20;
+            level3Button.y = canvas.height / 2 + canvas.height / 4 - levelButtonHeight / 2;
         }
 
         toggleAudio(x, y);
@@ -1096,7 +1601,6 @@ function mouseUpHandler(e)
             if(validPlacement)
             {
                 draggedGarbage.image = dragImg;
-                draggedGarbage.falling = true;   // allow it to fall again
                 garbage.push(draggedGarbage);
             }
             else
@@ -1104,7 +1608,6 @@ function mouseUpHandler(e)
                 draggedGarbage.image = dragImg;
                 draggedGarbage.x = tempX;
                 draggedGarbage.y = tempY;
-                draggedGarbage.falling = true;   // allow it to fall again
                 garbage.push(draggedGarbage);
             }
         }
@@ -1134,7 +1637,200 @@ function touch2Mouse(e)
   e.preventDefault();
 }
 
-// Drawing Functions
+
+function keyDownHandler(e) {
+    // prevent page scroll on arrows/space
+    if (["ArrowRight","ArrowLeft","ArrowDown","ArrowUp","Enter"," ", "Spacebar"].includes(e.key)) {
+        e.preventDefault(); // stops the browser from scrolling when these keys are pressed
+    }
+
+    //Only handle keyboard input when we are playing the Matching game and the timer is not paused
+    if (currentState == state.PLAYMATCH && !timer.isPaused()) {
+        // use row/col math to keep movement tidy
+        const rows = tileRowCount; 
+        const cols = tileColumnCount;
+
+        // Convert the current focusedTileIndex into (col, row) coordinates
+        // In column-major order (not row by row): index = col * rows + row
+        let col = Math.floor(focusedTileIndex / rows); // find the current column
+        let row = focusedTileIndex % rows; // find the current row
+
+        //Arrow key movement
+        if (e.key === "ArrowRight") {
+            col = (col + 1) % cols; // move right, wrap around at the last column
+        } else if (e.key === "ArrowLeft") {
+            col = (col - 1 + cols) % cols; // move left, wrap around to last column if needed
+        } else if (e.key === "ArrowDown") {
+            row = (row + 1) % rows;
+        } else if (e.key === "ArrowUp") {
+            row = (row - 1 + rows) % rows;
+        } else if (e.key === "Enter" || e.key === " " || e.key === "Spacebar"){//Flip tile with Enter or Space
+            // Check if tile is flippable: not already flipped, not matched,
+            // less than 2 flips active, and no delay timers running
+            if (!tiles[focusedTileIndex].flipped && !tiles[focusedTileIndex].matched && numberTilesFlipped < 2 && !timer.isMatchDelayed() && !timer.isEndDelayed()) {
+                
+                tiles[focusedTileIndex].flipped = true;// flip the tile
+
+                if (numberTilesFlipped == 1) {
+                    // This is the second tile flipped
+                    secondFlippedTileIndex = focusedTileIndex;
+                } else {
+                    // This is the first tile flipped
+                    if (!muted) {
+                        tileFlipSound.load();
+                        tileFlipSound.play();
+                    }
+                    firstFlippedTileIndex = focusedTileIndex;
+                }
+
+                numberTilesFlipped++; // increase flip counter
+
+                //If two tiles are flipped, check for match
+                if (numberTilesFlipped == 2) {
+
+                    if (tiles[firstFlippedTileIndex].image == tiles[secondFlippedTileIndex].image) {
+                        tiles[firstFlippedTileIndex].matched = true;
+                        tiles[secondFlippedTileIndex].matched = true;
+                        score += 50;
+                        
+                        // Show match info depending on what image it was
+                        switch(tiles[firstFlippedTileIndex].image)
+                        {
+                            case bananaMatchImg:
+                            matchInfoImage = bananaMatchImg;
+                            matchInfoString1 = "Banana peels can be composted with other organics.";
+                            matchInfoString2 = "";
+                            break;
+                            case bottleMatchImg:
+                            matchInfoImage = bottleMatchImg;
+                            matchInfoString1 = "Plastic bottles can be recycled with other plastics.";
+                            matchInfoString2 = "";
+                            break;
+                            case chipsMatchImg:
+                            matchInfoImage = chipsMatchImg;
+                            matchInfoString1 = "Chip bags should be placed in the trash.";
+                            matchInfoString2 = "";
+                            break;
+                            case grassMatchImg:
+                            matchInfoImage = grassMatchImg;
+                            matchInfoString1 = "Grass clippings can be composted with other organics.";
+                            matchInfoString2 = "";
+                            break;
+                            case newsPaperMatchImg:
+                            matchInfoImage = newsPaperMatchImg;
+                            matchInfoString1 = "Newspaper can be recycled with other papers.";
+                            matchInfoString2 = "";
+                            break;
+                            case paperCupMatchImg:
+                            matchInfoImage = paperCupMatchImg;
+                            matchInfoString1 = "Coffee cups can be composted with other organics.";
+                            matchInfoString2 = "";
+                            break;
+                            case paperTowelsMatchImg:
+                            matchInfoImage = paperTowelsMatchImg;
+                            matchInfoString1 = "Paper towels can be composted with other organics.";
+                            matchInfoString2 = "";
+                            break;
+                            case plasticBagMatchImg:
+                            matchInfoImage = plasticBagMatchImg;
+                            matchInfoString1 = "Plastic bags should be placed in the trash.";
+                            matchInfoString2 = "";
+                            break;
+                            case strawAndLidMatchImg:
+                            matchInfoImage = strawAndLidMatchImg;
+                            matchInfoString1 = "Plastic straws and disposable cup lids can be";
+                            matchInfoString2 = "recycled with other plastics.";
+                            break;
+                            case coffeeLidMatchImg:
+                            matchInfoImage = coffeeLidMatchImg;
+                            matchInfoString1 = "Disposable plastic coffee cup lids can be recycled";
+                            matchInfoString2 = "with other plastics.";
+                            break;
+                            case appleMatchImg:
+                            matchInfoImage = appleMatchImg;
+                            matchInfoString1 = "Apple cores can be composted with other organics.";
+                            matchInfoString2 = "";
+                            break;
+                            case glassJarMatchImg:
+                            matchInfoImage = glassJarMatchImg;
+                            matchInfoString1 = "Glass food jars can be recycled.";
+                            matchInfoString2 = "";
+                            break;
+                            case mailMatchImg:
+                            matchInfoImage = mailMatchImg;
+                            matchInfoString1 = "Mail can be recycled with other papers.";
+                            matchInfoString2 = "";
+                            break;
+                            case petWasteMatchImg:
+                            matchInfoImage = petWasteMatchImg;
+                            matchInfoString1 = "Pet waste should be placed in the trash.";
+                            matchInfoString2 = "";
+                            break;
+                            case paperPlatesMatchImg:
+                            matchInfoImage = paperPlatesMatchImg;
+                            matchInfoString1 = "Paper plates can be composted with other organics.";
+                            matchInfoString2 = "";
+                            break;
+                            case takeOutBoxMatchImg:
+                            matchInfoImage = takeOutBoxMatchImg;
+                            matchInfoString1 = "Chopsticks and take-out food boxes can be composted";
+                            matchInfoString2 = "with other organics.";
+                            break;
+                            case bonesMatchImg:
+                            matchInfoImage = bonesMatchImg;
+                            matchInfoString1 = "Meat and bones can be composted with other organics.";
+                            matchInfoString2 = "";
+                            break;
+                            case milkCartonMatchImg:
+                            matchInfoImage = milkCartonMatchImg;
+                            matchInfoString1 = "Milk cartons can be composted with other organics.";
+                            matchInfoString2 = "";
+                            break;
+                            case paperBagMatchImg:
+                            matchInfoImage = paperBagMatchImg;
+                            matchInfoString1 = "Paper bags can be recycled with other papers.";
+                            matchInfoString2 = "";
+                            break;
+                            case sodaCanMatchImg:
+                            matchInfoImage = sodaCanMatchImg;
+                            matchInfoString1 = "Aluminum cans may be recycled with other metals.";
+                            matchInfoString2 = "";
+                            break;
+                            case brokenPlateMatchImg:
+                            matchInfoImage = brokenPlateMatchImg;
+                            matchInfoString1 = "Broken dishes and glassware should be placed in";
+                            matchInfoString2 = "the trash.";
+                            break;
+                            default:
+                            //do nothing
+                        }
+                        displayMatchInfo = true; //tell draw() to show info box
+                        timer.matchDelay();      //short delay so player can see match
+
+                        //Reset flip counter after delay
+                        setTimeout(() => {
+                        timer.update();          // advance the timer
+                        timer.endMatchDelay();   // request to end delay
+                        timer.update();          // commit the change
+                        numberTilesFlipped = 0;  // reset flips
+                        }, timer.matchDelayDuration + 10); // small buffer helps timing
+
+                    }else {
+                        //No match: start a miss delay
+                        timer.missDelay();
+                    }
+                }
+            }
+            return; //exit function after flipping so we don’t change focused index
+        }
+
+        // Convert (col,row) back into index for highlighting
+        focusedTileIndex = col * rows + row;
+    }
+}
+
+
+
 function drawGameBoard()
 {
     ctx.beginPath();
@@ -1189,7 +1885,7 @@ function drawTiles()
         }
     }
 }
-
+    
 function drawLoadingScreen()
 {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1204,7 +1900,7 @@ function drawLoadingScreen()
         backgroundMusic.play();
     }
 }
-
+    
 function drawEmptyLoadingBar()
 {
     ctx.beginPath();
@@ -1394,13 +2090,6 @@ function drawSortingGame()
         ctx.drawImage(garbage[i].image, garbage[i].x, garbage[i].y, garbage[i].size, garbage[i].size);
     }
 
-    // 🔹 Highlight active garbage in keyboard mode
-    if (keyboardMode && activeGarbage) {
-        ctx.strokeStyle = "red";
-        ctx.lineWidth = 4;
-        ctx.strokeRect(activeGarbage.x, activeGarbage.y, activeGarbage.size, activeGarbage.size);
-    }
-
     if(mouseDown)
     {
         ctx.drawImage(draggedGarbage.image, draggedGarbage.x, draggedGarbage.y, draggedGarbage.size, draggedGarbage.size);
@@ -1485,7 +2174,186 @@ function drawFilledCircle()
     ctx.closePath();
 }
 
-// Main Game Loop
+function changeChooseButtonSize()
+{
+    if(chooseButtonSize < 250 && increaseChooseButtonSize)
+    {
+        chooseButtonSize += 0.25;
+
+        matchingButton.x -= 0.125;
+        matchingButton.y -= 0.125;
+
+        matchingButton.width = chooseButtonSize;
+        matchingButton.height = chooseButtonSize;
+
+        sortingButton.x -= 0.125;
+        sortingButton.y -= 0.125;
+
+        sortingButton.width = chooseButtonSize;
+        sortingButton.height = chooseButtonSize;
+
+        if(chooseButtonSize >= 250)
+        {
+            increaseChooseButtonSize = false;
+        }
+    }
+    else
+    {
+        chooseButtonSize -= 0.25;
+
+        matchingButton.x += 0.125;
+        matchingButton.y += 0.125;
+
+        matchingButton.width = chooseButtonSize;
+        matchingButton.height = chooseButtonSize;
+
+        sortingButton.x += 0.125;
+        sortingButton.y += 0.125;
+
+        sortingButton.width = chooseButtonSize;
+        sortingButton.height = chooseButtonSize;
+
+        if(chooseButtonSize <= 200)
+        {
+            increaseChooseButtonSize = true;
+        }
+    }
+}
+
+function changePlayButtonSize()
+{
+    if(currentPlayButtonSize < 125 && increasePlayButtonSize)
+    {
+        currentPlayButtonSize += 0.125;
+
+        playButton.x -= 0.0625;
+        playButton.y -= 0.0625;
+
+        playButton.size = currentPlayButtonSize;
+
+        if(currentPlayButtonSize >= 125)
+        {
+            increasePlayButtonSize = false;
+        }
+    }
+    else
+    {
+        currentPlayButtonSize -= 0.125;
+
+        playButton.x += 0.0625;
+        playButton.y += 0.0625;
+
+        playButton.size = currentPlayButtonSize;
+
+        if(currentPlayButtonSize <= 100)
+        {
+            increasePlayButtonSize = true;
+        }
+    }
+}
+
+function changeLevelButtonSize()
+{
+    if(levelButtonWidth < 150 && increaseLevelButtonSize)
+    {
+        levelButtonWidth += 0.125;
+        levelButtonHeight += 0.05;
+
+        level1Button.width = levelButtonWidth;
+        level1Button.height = levelButtonHeight;
+
+        level1Button.x -= 0.0625;
+        level1Button.y -= 0.025;
+
+        level2Button.width = levelButtonWidth;
+        level2Button.height = levelButtonHeight;
+
+        level2Button.x -= 0.0625;
+        level2Button.y -= 0.025;
+
+        level3Button.width = levelButtonWidth;
+        level3Button.height = levelButtonHeight;
+
+        level3Button.x -= 0.0625;
+        level3Button.y -= 0.025;
+
+        if(levelButtonWidth >= 150)
+        {
+            increaseLevelButtonSize = false;
+        }
+    }
+    else
+    {
+        levelButtonWidth -= 0.125;
+        levelButtonHeight -= 0.05;
+
+        level1Button.width = levelButtonWidth;
+        level1Button.height = levelButtonHeight;
+
+        level1Button.x += 0.0625;
+        level1Button.y += 0.025;
+
+        level2Button.width = levelButtonWidth;
+        level2Button.height = levelButtonHeight;
+
+        level2Button.x += 0.0625;
+        level2Button.y += 0.025;
+
+        level3Button.width = levelButtonWidth;
+        level3Button.height = levelButtonHeight;
+
+        level3Button.x += 0.0625;
+        level3Button.y += 0.025;
+
+        if(levelButtonWidth <= 125)
+        {
+            increaseLevelButtonSize = true;
+        }
+    }
+}
+
+function changeRestartAndHomeButtonSize()
+{
+    if(currentPlayButtonSize < 125 && increasePlayButtonSize)
+    {
+        currentPlayButtonSize += 0.125;
+
+        restartButton.x -= 0.0625;
+        restartButton.y -= 0.0625;
+
+        restartButton.size = currentPlayButtonSize;
+
+        homeButton.x -= 0.0625;
+        homeButton.y -= 0.0625;
+
+        homeButton.size = currentPlayButtonSize;
+
+        if(currentPlayButtonSize >= 125)
+        {
+            increasePlayButtonSize = false;
+        }
+    }
+    else
+    {
+        currentPlayButtonSize -= 0.125;
+
+        restartButton.x += 0.0625;
+        restartButton.y += 0.0625;
+
+        restartButton.size = currentPlayButtonSize;
+
+        homeButton.x += 0.0625;
+        homeButton.y += 0.0625;
+
+        homeButton.size = currentPlayButtonSize;
+
+        if(currentPlayButtonSize <= 100)
+        {
+            increasePlayButtonSize = true;
+        }
+    }
+}
+
 function draw()
 {
     
@@ -1599,7 +2467,6 @@ function draw()
         drawScore();
         drawEmptyBar();
         drawTimerBar();
-        
         //drawTime();
         drawTiles();
 
@@ -1688,56 +2555,39 @@ function draw()
             timeElapsed = Number(timer.getRunTime()/1000).toFixed(2);
         }
 
-        for (i = garbage.length - 1; i >= 0; i--) {
-            if (garbage[i].y > canvas.height - binFrontHeight) {
-                // Only count it if it fell into the correct lane
-                let correctLane = 
-                    (garbage[i].x >= paperColumnStart && garbage[i].x + garbageSize <= paperColumnEnd && garbage[i].type == paper) ||
-                    (garbage[i].x >= comingledColumnStart && garbage[i].x + garbageSize <= comingledColumnEnd && garbage[i].type == comingled) ||
-                    (garbage[i].x >= organicsColumnStart && garbage[i].x + garbageSize <= organicsColumnEnd && garbage[i].type == organics) ||
-                    (garbage[i].x >= landfillColumnStart && garbage[i].x + garbageSize <= landfillColumnEnd && garbage[i].type == landfill);
+        //remove garbage that went into a bin and increase the score percentage
+        for(i = garbage.length - 1; i >= 0; i--)
+        {
+            if(garbage[i].y > canvas.height - binFrontHeight)
+            {
+                if(!muted)
+                {
+                    tileMatchSound.load();
+                    tileMatchSound.play();
+                }
 
-                if (correctLane) {
-                    if (!muted) {
-                        tileMatchSound.load();
-                        tileMatchSound.play();
-                    }
+                if(garbage[i].type != landfill)
+                {
+                    recyclingSorted++;
+                    scorePercentage = Number((recyclingSorted+landfillSorted) / startingGarbageCount * 100).toFixed(0);
+                }
+                else
+                {
+                    landfillSorted++;
+                }
 
-                    if (garbage[i].type != landfill) {
-                        recyclingSorted++;
-                        scorePercentage = Number((recyclingSorted+landfillSorted) / startingGarbageCount * 100).toFixed(0);
-                    } else {
-                        landfillSorted++;
-                    }
+                garbage.splice(i, 1);
+                itemsRemaining--;
 
-                    // If this was the active garbage, free it so next spawns
-                    if (garbage[i] === activeGarbage) {
-                        activeGarbage = null;
-                    }
-
-                    garbage.splice(i, 1);
-                    itemsRemaining--;
-
-                    if (itemsRemaining < 1) {
-                        timer.missDelay();
-                    }
-                } else {
-                    // Wrong lane: just sit on bin top
-                    garbage[i].y = canvas.height - binFrontHeight - garbageSize;
-                    garbage[i].falling = false;
+                if(itemsRemaining < 1)
+                {
+                    timer.missDelay();
                 }
             }
         }
 
-        // Keyboard mode: one item at a time
-        if (keyboardMode && !timer.isPaused() && activeGarbage == null && garbageQueue.length > 0) {
-            activeGarbage = garbageQueue.pop(); 
-            activeGarbage.x = canvas.width/2 - garbageSize/2; // spawn at center top
-            activeGarbage.y = -garbageSize;
-            garbage.push(activeGarbage);
-        }
-        // Original mouse mode: keep multi-item spawn
-        else if (!keyboardMode && timer.getRunTime() > lastDropTime && garbageQueue.length > 0 && !timer.isPaused()) {
+        if(timer.getRunTime() > lastDropTime && garbageQueue.length > 0 && !timer.isPaused())
+        {
             garbage.push(garbageQueue.pop());
             lastDropTime += dropGarbageInterval;
         }
@@ -1811,51 +2661,53 @@ function draw()
             muteButton.size = soundButtonSize;
         }
 
-        // Move and check garbage
-        if (!timer.isPaused()) {
-            for (i = garbage.length - 1; i >= 0; i--) {
-                if (garbage[i].y + garbage[i].size >= canvas.height - binFrontHeight) {
-                    // reached bin level
-                    let correctLane = 
-                        (garbage[i].x >= paperColumnStart && garbage[i].x + garbageSize <= paperColumnEnd && garbage[i].type == paper) ||
-                        (garbage[i].x >= comingledColumnStart && garbage[i].x + garbageSize <= comingledColumnEnd && garbage[i].type == comingled) ||
-                        (garbage[i].x >= organicsColumnStart && garbage[i].x + garbageSize <= organicsColumnEnd && garbage[i].type == organics) ||
-                        (garbage[i].x >= landfillColumnStart && garbage[i].x + garbageSize <= landfillColumnEnd && garbage[i].type == landfill);
-
-                    if (correctLane) {
-                        // Score and remove
-                        if (!muted) {
-                            tileMatchSound.load();
-                            tileMatchSound.play();
+        if(!timer.isPaused())
+        {
+            for(i = 0; i < garbage.length; i++)
+            {
+                for(j = 0; j < garbage.length; j++)
+                {
+                    if(i != j)
+                    {
+                        if(garbage[i].isColliding(garbage[j]) && garbage[i].y < garbage[j].y)
+                        {
+                            garbage[i].falling = false;
                         }
-
-                        if (garbage[i].type != landfill) {
-                            recyclingSorted++;
-                            scorePercentage = Number((recyclingSorted+landfillSorted) / startingGarbageCount * 100).toFixed(0);
-                        } else {
-                            landfillSorted++;
-                        }
-
-                        if (garbage[i] === activeGarbage) {
-                            activeGarbage = null; // free highlight
-                        }
-
-                        garbage.splice(i, 1);
-                        itemsRemaining--;
-                        if (itemsRemaining < 1) {
-                            timer.missDelay();
-                        }
-                    } else {
-                        // Wrong lane: freeze on top of bin
-                        garbage[i].y = canvas.height - binFrontHeight - garbageSize;
-                        garbage[i].falling = false;
                     }
-                } else {
-                    // normal falling
-                    if (garbage[i].falling) {
+                }
+
+                if(garbage[i].isColliding(draggedGarbage) && mouseDown)
+                {
+                    garbage[i].falling = false;
+                }
+
+                if(garbage[i].y + garbage[i].size < canvas.height - binFrontHeight)
+                {
+                    if(garbage[i].falling)
+                    {
                         garbage[i].y += fallSpeed;
                     }
                 }
+                else if((garbage[i].x >= paperColumnStart &&
+                         garbage[i].x + garbageSize <= paperColumnEnd &&
+                         garbage[i].type == paper) ||
+                        (garbage[i].x >= comingledColumnStart &&
+                         garbage[i].x + garbageSize <= comingledColumnEnd &&
+                         garbage[i].type == comingled) ||
+                        (garbage[i].x >= organicsColumnStart &&
+                         garbage[i].x + garbageSize <= organicsColumnEnd &&
+                         garbage[i].type == organics)  ||
+                        (garbage[i].x >= landfillColumnStart &&
+                         garbage[i].x + garbageSize <= landfillColumnEnd &&
+                         garbage[i].type == landfill))
+                {
+                    if(garbage[i].falling)
+                    {
+                        garbage[i].y += fallSpeed;
+                    }
+                }
+
+                garbage[i].falling = true;
             }
         }
     }
@@ -1871,3 +2723,6 @@ function draw()
     requestAnimationFrame(draw);
 }
 
+loadAssets();
+
+draw();

@@ -1,3 +1,5 @@
+
+
 // Canvas and Context
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
@@ -44,10 +46,10 @@ var chooseButtonSize = 200;
 var originalPlayButtonSize = 100;
 var soundButtonSize = 100;
 var currentPlayButtonSize = originalPlayButtonSize;
-var sortButtonSize = 75;
+var sortButtonSize = 93;
 
-var levelButtonWidth = 125;
-var levelButtonHeight = 50;
+var levelButtonWidth = 150;
+var levelButtonHeight = 80;
 
 var increaseChooseButtonSize = true;
 var increasePlayButtonSize = true;
@@ -134,3 +136,8 @@ var muted = false;
 var images = [];
 var activeGarbage = null; // currently controlled garbage item
 var keyboardMode = true;  // one-item-at-a-time mode
+
+
+//sorting game anti-spam mechanic
+var ANTI_SPAM_Y_THRESHOLD_RATIO = 0.60;
+var ANTI_SPAM_RESET_OFFSET_PX = 120;
