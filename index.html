@@ -6,11 +6,28 @@
   <style>
     * { padding: 0; margin: 0; }
     canvas { background: #FFFFFF; display: block; margin: 0 auto; }
+    /* Grayscale toggle styles */
+        .grayscale-on { filter: grayscale(100%) saturate(0%) !important; -webkit-filter: grayscale(100%) saturate(0%) !important; }
+        #grayscaleToggle {
+            position: fixed;
+            right: 16px;
+            top: 8px;
+            z-index: 9999;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            cursor: pointer;
+        }
   </style>
 </head>
 <body>
 
   <canvas id="myCanvas" width="960" height="640"></canvas>
+<!-- Grayscale toggle button (JS will wire and persist state) -->
+<button id="grayscaleToggle" aria-pressed="false">Grayscale: Off</button>
 
   <!-- Classes first -->
 <script src="Classes/Tile.js"></script>
@@ -28,6 +45,6 @@
 <script src="js/input.js"></script>
 <script src="js/gameLogic.js"></script>
 <script src="js/game.bootstrap.js"></script>
-
+<script src="js/grayscale-ui.js"></script>
 </body>
 </html>
