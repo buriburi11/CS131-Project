@@ -1,4 +1,5 @@
-
+var matchTimerEnabled = true; // T toggles this
+var sortTimerEnabled = true;  // for Sorting game
 
 // Canvas and Context
 var canvas = document.getElementById("myCanvas");

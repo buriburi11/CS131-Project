@@ -1424,12 +1424,18 @@ function drawSidebar()
     ctx.fill();
     ctx.closePath();
 
-    //"Time Remaining" text
-    ctx.font = "25px Comic Sans MS";
-    ctx.fillStyle = "black";
+    // === Sorting timer toggle instruction ===
+    ctx.fillStyle = "#001F8E"; // deep blue
     ctx.textAlign = "center";
-    ctx.fillText("Time", sidebarLocalXOrigin + (binWidth*(4/8)), canvas.height * (1/8) - 20);
-    ctx.fillText("Remaining", sidebarLocalXOrigin + (binWidth*(4/8)), canvas.height * (1/8) + 10);
+    if (sortTimerEnabled) {
+        ctx.font = "bold 23px Arial";
+        ctx.fillText("Press T to", sidebarLocalXOrigin + (binWidth * (4 / 8)), canvas.height * (1 / 8) - 15);
+        ctx.fillText("disable the timer", sidebarLocalXOrigin + (binWidth * (4 / 8)), canvas.height * (1 / 8) + 15);
+    } else {
+        ctx.font = "bold 26px Arial";
+        ctx.fillText("Timer Off", sidebarLocalXOrigin + (binWidth * (4 / 8)), canvas.height * (1 / 8));
+    }
+    // =========================================
 
     //yellow box that contains "Score:"
     ctx.beginPath();
@@ -1462,8 +1468,10 @@ function drawSidebar()
     ctx.fillText("Diverted from", sidebarLocalXOrigin + (binWidth*(4/8)), canvas.height *(7/8)+15);
     ctx.fillText("the landfill", sidebarLocalXOrigin + (binWidth*(4/8)), canvas.height *(7/8)+50);
 
-    drawEmptyCircle();
-    drawFilledCircle();
+    if (sortTimerEnabled) {
+        drawEmptyCircle();
+        drawFilledCircle();
+    }
 }
 
 function drawEmptyCircle()
@@ -1597,8 +1605,22 @@ function draw()
 
         drawGameBoard();
         drawScore();
-        drawEmptyBar();
-        drawTimerBar();
+
+        if (matchTimerEnabled) {
+            drawEmptyBar();
+            drawTimerBar();
+        }
+
+        // === Show T-key instruction on top center ===
+        ctx.font = "bold 27px Arial";
+        ctx.fillStyle = "#001F8E";
+        ctx.textAlign = "center";
+        const timerMsg = matchTimerEnabled
+            ? "Press T to disable the timer"
+            : "Timer Off";
+        ctx.fillText(timerMsg, canvas.width / 2, 20);
+        // ============================================
+
         
         //drawTime();
         drawTiles();
@@ -1653,7 +1675,7 @@ function draw()
             tiles[secondFlippedTileIndex].flipped = false;
         }
 
-        if(timer.getRunTime() > timer.getTimerTime() && !timer.isPaused() && !timer.isMatchDelayed() && !timer.isEndDelayed())
+        if(matchTimerEnabled && timer.getRunTime() > timer.getTimerTime() && !timer.isPaused() && !timer.isMatchDelayed() && !timer.isEndDelayed())
         {
             if(!muted)
             {
@@ -1746,7 +1768,7 @@ function draw()
 
         drawSortingGame();
 
-        //drawTime();
+        
 
         if(timer.isPaused())
         {
@@ -1767,7 +1789,7 @@ function draw()
             drawMuteButton();
         }
 
-        if(timer.getRunTime() > timer.getTimerTime() && !timer.isPaused())
+        if(sortTimerEnabled && timer.getRunTime() > timer.getTimerTime() && !timer.isPaused())
         {
             if(!muted)
             {

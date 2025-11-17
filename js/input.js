@@ -354,3 +354,19 @@ document.addEventListener("keydown", function (e) {
     return;
   }
 });
+
+// Toggle Matching timer UI/timeout with T (only affects PLAYMATCH)
+document.addEventListener("keydown", function (e) {
+    if ((e.key || "").toLowerCase() !== "t") return;
+    if (currentState !== state.PLAYMATCH) return; // only inside Matching gameplay
+    e.preventDefault(); // keep it from doing anything else in the page
+    matchTimerEnabled = !matchTimerEnabled;      // do NOT pause the timer
+});
+
+// Toggle Sorting timer UI/timeout with T (only affects PLAYSORT)
+document.addEventListener("keydown", function (e) {
+    if ((e.key || "").toLowerCase() !== "t") return;
+    if (currentState !== state.PLAYSORT) return; // only inside Sorting gameplay
+    e.preventDefault();
+    sortTimerEnabled = !sortTimerEnabled; // toggle visibility & timeout, not pause
+});
