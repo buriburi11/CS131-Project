@@ -133,6 +133,7 @@ var itemsRemaining;
 
 
 // Misc
+var narration = false;
 var muted = false;
 var images = [];
 var activeGarbage = null; // currently controlled garbage item

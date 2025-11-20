@@ -20,6 +20,14 @@ document.addEventListener("keydown", function(e) {
     }
 });
 
+//keyboard narration toggle (N)
+document.addEventListener("keydown", function(e) {
+    if (e.key.toLowerCase() === "n") {
+        if (narration)
+            speechSynthesis.cancel();
+        narration = !narration;
+    }
+});
 // Keyboard gameplay (arrows, enter, space, z/x/c/v for sorting)
 document.addEventListener("keydown", keyDownHandler, false);
 

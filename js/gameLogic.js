@@ -1234,7 +1234,7 @@ function drawWelcome1Screen()
 {
     ctx.drawImage(welcome1Img, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(playButton.image, playButton.x, playButton.y, playButton.size, playButton.size);
-    ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);
+    ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);        
 }
 
 function drawWelcome2Screen()
@@ -1493,13 +1493,23 @@ function drawFilledCircle()
     ctx.closePath();
 }
 
+let lastSpoken = "";
+function speak(text) {
+  if (text !== lastSpoken && narration == true) {
+    speechSynthesis.cancel();    // stop previous speech
+    const utter = new SpeechSynthesisUtterance(text);
+    speechSynthesis.speak(utter);
+    lastSpoken = text;
+  }
+}
+
 // Main Game Loop
 function draw()
 {
     
     if(currentState == state.LOADING){
         drawLoadingScreen();
-        
+
     }else if(currentState == state.MAININTRO)
     {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1514,6 +1524,8 @@ function draw()
 
         drawWelcome1Screen();
 
+        speak("hi friends! i'm professor davis green. keeping waste out of landfills by recycling and composting is important.");
+
         changePlayButtonSize();
     }
     else if(currentState == state.WELCOME2)
@@ -1521,6 +1533,8 @@ function draw()
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         drawWelcome2Screen();
+        
+        speak("i need your help. will you help me divert waste from the landfill");
 
         changePlayButtonSize();
     }
@@ -1530,6 +1544,8 @@ function draw()
 
         drawChooseGameScreen();
 
+        speak("play both games to learn about keeping waste out of land fills, press the left arrow for matching and the right arrow for sorting");
+       
         changeChooseButtonSize();
     }
     else if(currentState == state.MATCHINTRO1)
@@ -1538,6 +1554,8 @@ function draw()
 
         drawMatchingIntro1();
 
+        speak("recology davis picks up all the trash, recycling and organics from davis");
+
         changePlayButtonSize();
     }
     else if(currentState == state.MATCHINTRO2)
@@ -1545,6 +1563,8 @@ function draw()
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         drawMatchingIntro2();
+        
+        speak("recyclables are brought to the recycling center in davis. organics are sent to the composting facility at the yolo county landfill. trash is buried in the yolo county landfill.");
 
         changePlayButtonSize();
     }
@@ -1554,6 +1574,8 @@ function draw()
 
         drawMatchingIntro3();
 
+        speak("click on two cards to find a match and learn which materials can be recycled and composted.");
+
         changePlayButtonSize();
     }
     else if(currentState == state.MATCHLEVEL)
@@ -1561,6 +1583,8 @@ function draw()
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         drawMatchingChooseLevelScreen();
+
+        speak("choose a level to start the game! click or use the arrow keys to move. press the space bar or enter to flip the cards.");
 
         changeLevelButtonSize();
     }
@@ -1570,6 +1594,8 @@ function draw()
 
         drawSortingIntro1();
 
+        speak("in davis we sort waste into 4 differnt bins");
+
         changePlayButtonSize();
     }
     else if(currentState == state.SORTINTRO2)
@@ -1577,6 +1603,8 @@ function draw()
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         drawSortingIntro2();
+
+        speak("sort the falling waste into the correct bin. see how much waste you can keep out of the landfill");
 
         changePlayButtonSize();
     }
