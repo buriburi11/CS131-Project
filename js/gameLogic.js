@@ -649,6 +649,10 @@ function clickHandler(e)
                 pauseButton.image = playButtonImg;
                 pauseButton.x = canvas.width / 2 - originalPlayButtonSize * 2 - originalPlayButtonSize / 4;
                 pauseButton.y = canvas.height / 2 - originalPlayButtonSize / 2 - originalPlayButtonSize / 8;
+
+                if (narration) {
+                    speak("The game is paused. You can press Escape to unpause. Press H for home, R to restart, or M to mute.");
+                }
             }
             else if(!timer.isMatchDelayed() && !timer.isEndDelayed())
             {
@@ -662,6 +666,10 @@ function clickHandler(e)
                 pauseButton.image = pauseButtonImg;
                 pauseButton.x = canvas.width - originalPlayButtonSize * 2;
                 pauseButton.y = canvas.height - originalPlayButtonSize - 15;
+                
+                if (narration) {
+                    speak("Resuming the game.");
+                }
             }
         }
 
@@ -865,6 +873,10 @@ function clickHandler(e)
                 pauseButton.x = canvas.width / 2 - originalPlayButtonSize * 2 - originalPlayButtonSize / 4;
                 pauseButton.y = canvas.height / 2 - originalPlayButtonSize / 2 - originalPlayButtonSize / 8;
                 pauseButton.size = originalPlayButtonSize;
+
+                if (narration) {
+                    speak("The game is paused. Press Escape to unpause. Press H for home, R to restart, or M to mute.");
+                }
             }
             else
             {
@@ -880,6 +892,9 @@ function clickHandler(e)
                 pauseButton.x = sidebarLocalXOrigin + (binWidth*(1/8));
                 pauseButton.y = canvas.height * (7/16);
                 pauseButton.size = sortButtonSize;
+                if (narration) {
+                    speak("Resuming the game.");
+                }
             }
         }
 
