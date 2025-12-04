@@ -143,3 +143,120 @@ var keyboardMode = true;  // one-item-at-a-time mode
 //sorting game anti-spam mechanic
 var ANTI_SPAM_Y_THRESHOLD_RATIO = 0.60;
 var ANTI_SPAM_RESET_OFFSET_PX = 120;
+
+
+
+
+
+// -------------------------------------------------------------
+// CREATE HELP BUTTON + POPUP COMPLETELY IN JAVASCRIPT
+// -------------------------------------------------------------
+
+// 1. Create help button
+const helpBtn = document.createElement("div");
+helpBtn.id = "help-button";
+helpBtn.innerText = "❔";
+document.body.appendChild(helpBtn);
+
+// 2. Create popup panel
+const panel = document.createElement("div");
+panel.id = "shortcut-panel";
+
+panel.innerHTML = `
+  <h3 style="margin-top:0;">Keyboard Shortcuts</h3>
+
+  <p><strong>M</strong> – Mute / Unmute</p>
+  <p><strong>H</strong> – Return Home</p>
+  <p><strong>R</strong> – Restart Game</p>
+  <p><strong>P</strong> – Continue / Advance Screens</p>
+  <p><strong>Esc</strong> – Pause</p>
+  <p><strong>T</strong> – Disable Timer</p>
+  <p><strong>N</strong> – Enable / Disable Narration</p>
+
+
+  <hr>
+
+  <p><strong>Arrow Keys</strong> – Navigate Menus / Move Tile (Matching)</p>
+  <p><strong>Enter / Space</strong> – Select / Flip Tile</p>
+
+  <hr>
+
+  <p><strong>1 / 2 / 3</strong> – Choose Level</p>
+
+  <hr>
+
+  <p><strong>Z</strong> – Sort to Bin 1</p>
+  <p><strong>X</strong> – Sort to Bin 2</p>
+  <p><strong>C</strong> – Sort to Bin 3</p>
+  <p><strong>V</strong> – Sort to Bin 4</p>
+`;
+document.body.appendChild(panel);
+
+// -------------------------------------------------------------
+// STYLE BOTH ELEMENTS USING JAVASCRIPT ONLY
+// -------------------------------------------------------------
+
+// HELP BUTTON STYLE
+helpBtn.style.position = "fixed";
+helpBtn.style.top = "70px";  // adjust as needed
+helpBtn.style.right = "20px";
+helpBtn.style.background = "#1f3d24";
+helpBtn.style.color = "white";
+helpBtn.style.width = "40px";
+helpBtn.style.height = "40px";
+helpBtn.style.borderRadius = "50%";
+helpBtn.style.display = "flex";
+helpBtn.style.alignItems = "center";
+helpBtn.style.justifyContent = "center";
+helpBtn.style.fontSize = "22px";
+helpBtn.style.cursor = "pointer";
+helpBtn.style.zIndex = "99999";
+helpBtn.style.userSelect = "none";
+helpBtn.style.boxShadow = "0px 0px 6px rgba(0,0,0,0.3)";
+
+
+// PANEL STYLE
+panel.style.position = "fixed";
+panel.style.top = "50%";
+panel.style.left = "50%";
+panel.style.transform = "translate(-50%, -50%)";
+panel.style.width = "320px";
+panel.style.background = "#1f3d24";
+panel.style.color = "white";
+panel.style.padding = "20px";
+panel.style.borderRadius = "12px";
+panel.style.boxShadow = "0 8px 20px rgba(0,0,0,0.4)";
+panel.style.display = "none";
+panel.style.zIndex = "20000";
+panel.style.fontFamily = "Arial, sans-serif";
+panel.style.fontSize = "15px";
+
+// Style <hr> lines
+panel.querySelectorAll("hr").forEach(hr => {
+    hr.style.border = "none";
+    hr.style.borderBottom = "1px solid #ffffff55";
+    hr.style.margin = "10px 0";
+});
+
+// -------------------------------------------------------------
+// OPEN/CLOSE LOGIC
+// -------------------------------------------------------------
+
+// open popup
+helpBtn.addEventListener("click", () => {
+  panel.style.display = "block";
+});
+
+// close popup on click outside
+document.addEventListener("click", (e) => {
+  if (e.target !== helpBtn && !panel.contains(e.target)) {
+    panel.style.display = "none";
+  }
+});
+
+
+function toggleNarration() {
+  narration = !narration;
+
+  narrationButton.image = narration ? narrationOnImg : narrationOffImg;
+}

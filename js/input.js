@@ -77,6 +77,7 @@ function keyDownHandler(e) {
             if (!tiles[focusedTileIndex].flipped && !tiles[focusedTileIndex].matched && numberTilesFlipped < 2 && !timer.isMatchDelayed() && !timer.isEndDelayed()) {
                 
                 tiles[focusedTileIndex].flipped = true;// flip the tile
+                speak(getItemName(tiles[focusedTileIndex].image));
 
                 if (numberTilesFlipped == 1) {
                     // This is the second tile flipped
@@ -96,6 +97,7 @@ function keyDownHandler(e) {
                 if (numberTilesFlipped == 2) {
 
                     if (tiles[firstFlippedTileIndex].image == tiles[secondFlippedTileIndex].image) {
+                        speak("Match");
                         tiles[firstFlippedTileIndex].matched = true;
                         tiles[secondFlippedTileIndex].matched = true;
                         score += 50;
@@ -211,6 +213,20 @@ function keyDownHandler(e) {
                             default:
                             //do nothing
                         }
+
+                        lastSpoken = "";
+                        // wait 300ms after "Match" so this line is not cancelled
+                        setTimeout(() => {
+                            speak(matchInfoString1);
+
+                            // speak second line a bit later so it’s not cancelled
+                            if (matchInfoString2 && matchInfoString2.length > 0) {
+                                setTimeout(() => {
+                                    speak(matchInfoString2);
+                                }, 250);
+                            }
+                        }, 350);
+
                         displayMatchInfo = true; //tell draw() to show info box
                         timer.matchDelay();      //short delay so player can see match
 
@@ -224,6 +240,7 @@ function keyDownHandler(e) {
                         }, timer.matchDelayDuration + 10); // small buffer helps timing
 
                     }else {
+                        speak("Not a match");
                         //No match: start a miss delay
                         timer.missDelay();
                     }
@@ -282,9 +299,18 @@ function keyDownHandler(e) {
 // Map Escape to pause/unpause toggle
 document.addEventListener("keydown", function(e) {
     if (e.key === "Escape" || e.key === "Esc") {
-        // Prevent default to avoid closing dialogs or exiting fullscreen unexpectedly
         e.preventDefault();
-        if (typeof togglePause === 'function') togglePause();
+
+        const wasPaused = timer.isPaused();  // check before toggle
+        togglePause();
+
+        if (narration) {
+            if (!wasPaused) {
+                speak(".");
+            } else {
+                speak("Resuming the game.");
+            }
+        }
     }
 });
 
@@ -339,6 +365,9 @@ document.addEventListener("keydown", function (e) {
   e.preventDefault();
 
   if (key === "r") {
+    if (narration) {
+        speak("Restarting the game.");
+    }
     // simulate a click in the center of the Restart button
     const clickX = canvas.offsetLeft + restartButton.x + (restartButton.size / 2);
     const clickY = canvas.offsetTop  + restartButton.y + (restartButton.size / 2);
@@ -347,6 +376,9 @@ document.addEventListener("keydown", function (e) {
   }
 
   if (key === "h") {
+    if (narration) {
+        speak("Going to the home page.");
+    }
     // simulate a click in the center of the Home button
     const clickX = canvas.offsetLeft + homeButton.x + (homeButton.size / 2);
     const clickY = canvas.offsetTop  + homeButton.y + (homeButton.size / 2);
@@ -361,6 +393,9 @@ document.addEventListener("keydown", function (e) {
     if (currentState !== state.PLAYMATCH) return; // only inside Matching gameplay
     e.preventDefault(); // keep it from doing anything else in the page
     matchTimerEnabled = !matchTimerEnabled;      // do NOT pause the timer
+    if (narration) {
+        speak(matchTimerEnabled ? "." : "Timer off");
+    }
 });
 
 // Toggle Sorting timer UI/timeout with T (only affects PLAYSORT)
@@ -369,4 +404,7 @@ document.addEventListener("keydown", function (e) {
     if (currentState !== state.PLAYSORT) return; // only inside Sorting gameplay
     e.preventDefault();
     sortTimerEnabled = !sortTimerEnabled; // toggle visibility & timeout, not pause
+    if (narration) {
+        speak(sortTimerEnabled ? "." : "Timer off");
+    }
 });

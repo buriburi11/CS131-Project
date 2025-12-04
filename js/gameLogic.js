@@ -174,6 +174,13 @@ function clickHandler(e)
             timer.update();
             numberTilesFlipped = 0;
         }
+
+        if (narrationButton.clicked(x, y)) {
+            if (typeof toggleNarration === "function") {
+                toggleNarration();
+            }
+            return;
+        }
     }
 
     if(currentState == state.MAININTRO)
@@ -279,11 +286,6 @@ function clickHandler(e)
 
             currentState = state.MATCHINTRO2;
 
-            /*
-            playButton.x = canvas.width / 2 - originalPlayButtonSize / 2;
-            playButton.y = canvas.height / 2 + canvas.height / 4 - originalPlayButtonSize - originalPlayButtonSize / 8;
-            */
-
             //position for MatchingIntro2 only (move to the left of the bubble)
             playButton.x = canvas.width / 2 - canvas.width / 3 - originalPlayButtonSize / 2; 
             playButton.y = canvas.height / 2 - canvas.height / 14 - originalPlayButtonSize;
@@ -370,8 +372,8 @@ function clickHandler(e)
                 level = 3;
             }
 
+            matchIntroSpoken = false;
             setMatchLevelBoard();
-
             currentState = state.PLAYMATCH;
 
             pauseButton.image = pauseButtonImg;
@@ -408,11 +410,31 @@ function clickHandler(e)
         	toggleAudio(x, y); 
         }
 
+        // === Click the timer bar to toggle timer (same as T key) ===
+        // The timer bar is drawn from y = 0 down to y = timerBarHeight
+        if (y >= 0 && y <= timerBarHeight) {
+            matchTimerEnabled = !matchTimerEnabled;  // toggle ON/OFF
+
+            if (narration) {
+                speak(matchTimerEnabled ? "." : "Timer off");
+            }
+
+            // optional: play the button sound
+            if (!muted) {
+                buttonSound.load();
+                buttonSound.play();
+            }
+
+            return; // stop here so we don't also flip a tile on the same click
+        }
+
         for(i = 0; i < tiles.length; i++)
         {
             if(tiles[i].clicked(x, y) && !timer.isPaused() && !tiles[i].flipped && !tiles[i].matched && numberTilesFlipped < 2 && !timer.isMatchDelayed() && !timer.isEndDelayed())
             {
                 tiles[i].flipped = true;
+
+                speak(getItemName(tiles[i].image));
 
                 if(numberTilesFlipped == 1)
                 {
@@ -441,6 +463,7 @@ function clickHandler(e)
                             tileMatchSound.play();
                         }
 
+                        speak("Match");
                         tiles[firstFlippedTileIndex].matched = true;
                         tiles[secondFlippedTileIndex].matched = true;
 
@@ -555,6 +578,28 @@ function clickHandler(e)
                             //do nothing
                         }
 
+                        // protect educational info from being interrupted
+                        let savedLast = lastSpoken;
+                        lastSpoken = "_MATCH_INFO_";
+
+                        displayMatchInfo = true;
+
+                        setTimeout(() => {
+                            speak(matchInfoString1);
+
+                            if (matchInfoString2 && matchInfoString2.length > 0) {
+                                setTimeout(() => {
+                                    speak(matchInfoString2);
+                                }, 300);
+                            }
+
+                            // restore lastSpoken AFTER info finishes
+                            setTimeout(() => {
+                                lastSpoken = savedLast;
+                            }, 1000);
+
+                        }, 350);
+
                         displayMatchInfo = true;
 
                         score += 50;
@@ -581,6 +626,8 @@ function clickHandler(e)
                             tileFlipSound.load();
                             tileFlipSound.play();
                         }
+
+                        speak("Not a match");
 
                         timer.missDelay();
                     }
@@ -631,6 +678,7 @@ function clickHandler(e)
             }
 
             currentState = state.MATCHLEVEL;
+            matchTimerEnabled = true;
 
             homeButton.x = canvas.width / 3 + originalPlayButtonSize / 2;
             homeButton.y = canvas.height / 2 + canvas.height / 4 - originalPlayButtonSize / 2;
@@ -656,6 +704,7 @@ function clickHandler(e)
             }
 
             currentState = state.CHOOSEGAME;
+            matchTimerEnabled = true;
 
             homeButton.x = canvas.width / 3 + originalPlayButtonSize / 2;
             homeButton.y = canvas.height / 2 + canvas.height / 4 - originalPlayButtonSize / 2;
@@ -736,6 +785,8 @@ function clickHandler(e)
                 level = 3;
             }
 
+            sortingIntroSpoken = false;
+
             setSortLevelBoard();
 
             currentState = state.PLAYSORT;
@@ -775,6 +826,27 @@ function clickHandler(e)
     	if(itemsRemaining >= 1)
     	{
         	toggleAudio(x, y);
+        }
+
+        // === Click the circle timer to toggle ON/OFF (same as T key) ===
+        let circleCenterX = sidebarLocalXOrigin + binWidth / 2;
+        let circleCenterY = canvas.height / 4 + timerCircleRadius / 2;
+
+        let dist = Math.sqrt((x - circleCenterX) ** 2 + (y - circleCenterY) ** 2);
+
+        if (dist <= timerCircleRadius) {
+            sortTimerEnabled = !sortTimerEnabled;
+
+            if (narration) {
+                speak(sortTimerEnabled ? "." : "Timer off");
+            }
+
+            if (!muted) {
+                buttonSound.load();
+                buttonSound.play();
+            }
+
+            return; 
         }
 
         if(pauseButton.clicked(x, y) && itemsRemaining >= 1)
@@ -824,6 +896,7 @@ function clickHandler(e)
             }
 
             currentState = state.SORTLEVEL;
+            sortTimerEnabled = true;
 
             homeButton.x = canvas.width / 3 + originalPlayButtonSize / 2;
             homeButton.y = canvas.height / 2 + canvas.height / 4 - originalPlayButtonSize / 2;
@@ -849,6 +922,7 @@ function clickHandler(e)
             }
 
             currentState = state.CHOOSEGAME;
+            sortTimerEnabled = true;
 
             homeButton.x = canvas.width / 3 + originalPlayButtonSize / 2;
             homeButton.y = canvas.height / 2 + canvas.height / 4 - originalPlayButtonSize / 2;
@@ -873,10 +947,12 @@ function clickHandler(e)
 
             if(gameTitle == "matching")
             {
+                matchTimerEnabled = true;
                 currentState = state.MATCHLEVEL;
             }
             else
             {
+                sortTimerEnabled = true;
                 currentState = state.SORTLEVEL;
             }
         }
@@ -1228,13 +1304,15 @@ function drawMainIntroScreen()
     ctx.drawImage(mainIntroImg, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(playButton.image, playButton.x, playButton.y, playButton.size, playButton.size);
     ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);
+    ctx.drawImage(narrationButton.image, narrationButton.x, narrationButton.y, narrationButton.size, narrationButton.size);
 }
 
 function drawWelcome1Screen()
 {
     ctx.drawImage(welcome1Img, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(playButton.image, playButton.x, playButton.y, playButton.size, playButton.size);
-    ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);        
+    ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);
+    ctx.drawImage(narrationButton.image, narrationButton.x, narrationButton.y, narrationButton.size, narrationButton.size);        
 }
 
 function drawWelcome2Screen()
@@ -1242,6 +1320,7 @@ function drawWelcome2Screen()
     ctx.drawImage(welcome2Img, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(playButton.image, playButton.x, playButton.y, playButton.size, playButton.size);
     ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);
+    ctx.drawImage(narrationButton.image, narrationButton.x, narrationButton.y, narrationButton.size, narrationButton.size);
 }
 
 function drawChooseGameScreen()
@@ -1249,7 +1328,14 @@ function drawChooseGameScreen()
     ctx.drawImage(chooseGameImg, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(matchingButton.image, matchingButton.x, matchingButton.y, matchingButton.width, matchingButton.height);
     ctx.drawImage(sortingButton.image, sortingButton.x, sortingButton.y, sortingButton.width, sortingButton.height);
+    
+    // 🔹 Position narration button BELOW mute button
+    narrationButton.x = muteButton.x;
+    narrationButton.y = muteButton.y + muteButton.size + 10;
+    narrationButton.size = muteButton.size;
+    
     ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);
+    ctx.drawImage(narrationButton.image, narrationButton.x, narrationButton.y, narrationButton.size, narrationButton.size);
 }
 
 function drawMatchingIntro1()
@@ -1257,6 +1343,7 @@ function drawMatchingIntro1()
     ctx.drawImage(matchingIntro1Img, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(playButton.image, playButton.x, playButton.y, playButton.size, playButton.size);
     ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);
+    ctx.drawImage(narrationButton.image, narrationButton.x, narrationButton.y, narrationButton.size, narrationButton.size);
 }
 
 function drawMatchingIntro2()
@@ -1264,6 +1351,7 @@ function drawMatchingIntro2()
     ctx.drawImage(matchingIntro2Img, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(playButton.image, playButton.x, playButton.y, playButton.size, playButton.size);
     ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);
+    ctx.drawImage(narrationButton.image, narrationButton.x, narrationButton.y, narrationButton.size, narrationButton.size);
 }
 
 function drawMatchingIntro3()
@@ -1271,6 +1359,7 @@ function drawMatchingIntro3()
     ctx.drawImage(matchingIntro3Img, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(playButton.image, playButton.x, playButton.y, playButton.size, playButton.size);
     ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);
+    ctx.drawImage(narrationButton.image, narrationButton.x, narrationButton.y, narrationButton.size, narrationButton.size);
 }
 
 function drawMatchingChooseLevelScreen()
@@ -1280,6 +1369,7 @@ function drawMatchingChooseLevelScreen()
     ctx.drawImage(level2Button.image, level2Button.x, level2Button.y, level2Button.width, level2Button.height);
     ctx.drawImage(level3Button.image, level3Button.x, level3Button.y, level3Button.width, level3Button.height);
     ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);
+    ctx.drawImage(narrationButton.image, narrationButton.x, narrationButton.y, narrationButton.size, narrationButton.size);
 }
 
 function drawSortingChooseLevelScreen()
@@ -1288,7 +1378,14 @@ function drawSortingChooseLevelScreen()
     ctx.drawImage(level1Button.image, level1Button.x, level1Button.y, level1Button.width, level1Button.height);
     ctx.drawImage(level2Button.image, level2Button.x, level2Button.y, level2Button.width, level2Button.height);
     ctx.drawImage(level3Button.image, level3Button.x, level3Button.y, level3Button.width, level3Button.height);
+
+    // --- Put narration button in TOP-LEFT ---
+    narrationButton.x = soundButtonSize / 8;
+    narrationButton.y = soundButtonSize / 8;
+    narrationButton.size = soundButtonSize;
+
     ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);
+    ctx.drawImage(narrationButton.image, narrationButton.x, narrationButton.y, narrationButton.size, narrationButton.size);
 }
 
 function drawSortingIntro1()
@@ -1296,13 +1393,21 @@ function drawSortingIntro1()
     ctx.drawImage(sortingIntro1Img, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(playButton.image, playButton.x, playButton.y, playButton.size, playButton.size);
     ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);
+    ctx.drawImage(narrationButton.image, narrationButton.x, narrationButton.y, narrationButton.size, narrationButton.size);
 }
 
 function drawSortingIntro2()
 {
     ctx.drawImage(sortingIntro2Img, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(playButton.image, playButton.x, playButton.y, playButton.size, playButton.size);
+
+    // --- Put narration button in TOP-LEFT ---
+    narrationButton.x = soundButtonSize / 8;
+    narrationButton.y = soundButtonSize / 8;
+    narrationButton.size = soundButtonSize;
+
     ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);
+    ctx.drawImage(narrationButton.image, narrationButton.x, narrationButton.y, narrationButton.size, narrationButton.size);
 }
 
 function drawEndGameScreen()
@@ -1329,6 +1434,7 @@ function drawEndGameScreen()
     ctx.drawImage(restartButton.image, restartButton.x, restartButton.y, restartButton.size, restartButton.size);
     ctx.drawImage(homeButton.image, homeButton.x, homeButton.y, homeButton.size, homeButton.size);
     ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);
+    ctx.drawImage(narrationButton.image, narrationButton.x, narrationButton.y, narrationButton.size, narrationButton.size);
 
     
 }
@@ -1341,6 +1447,11 @@ function drawPauseButton()
 function drawMuteButton()
 {
     ctx.drawImage(muteButton.image, muteButton.x, muteButton.y, muteButton.size, muteButton.size);
+}
+
+function drawNarrationButton()
+{
+    ctx.drawImage(narrationButton.image, narrationButton.x, narrationButton.y, narrationButton.size, narrationButton.size);
 }
 
 function drawEmptyBar()
@@ -1428,9 +1539,13 @@ function drawSidebar()
     ctx.fillStyle = "#001F8E"; // deep blue
     ctx.textAlign = "center";
     if (sortTimerEnabled) {
-        ctx.font = "bold 23px Arial";
-        ctx.fillText("Press T to", sidebarLocalXOrigin + (binWidth * (4 / 8)), canvas.height * (1 / 8) - 15);
-        ctx.fillText("disable the timer", sidebarLocalXOrigin + (binWidth * (4 / 8)), canvas.height * (1 / 8) + 15);
+        ctx.font = "bold 19px Arial";
+        let cx = sidebarLocalXOrigin + (binWidth * (4 / 8));
+        let cy = canvas.height * (1 / 8);
+
+        ctx.fillText("Click the circle timer", cx, cy - 25);
+        ctx.fillText("or press T to", cx, cy);
+        ctx.fillText("disable the timer", cx, cy + 25);
     } else {
         ctx.font = "bold 26px Arial";
         ctx.fillText("Timer Off", sidebarLocalXOrigin + (binWidth * (4 / 8)), canvas.height * (1 / 8));
@@ -1494,13 +1609,62 @@ function drawFilledCircle()
 }
 
 let lastSpoken = "";
+let sortingIntroSpoken = false;
+let matchIntroSpoken = false;
+let endScreenSpoken = false;
 function speak(text) {
   if (text !== lastSpoken && narration == true) {
-    speechSynthesis.cancel();    // stop previous speech
+    //speechSynthesis.cancel();    // stop previous speech
     const utter = new SpeechSynthesisUtterance(text);
     speechSynthesis.speak(utter);
     lastSpoken = text;
   }
+}
+
+function getItemName(img) {
+    switch(img) {
+
+        case bananaMatchImg: return "Banana peel";
+        case appleMatchImg: return "Apple core";
+        case grassMatchImg: return "Grass";
+        case paperTowelsMatchImg: return "Paper towels";
+        case paperPlatesMatchImg: return "Paper plate";
+        case milkCartonMatchImg: return "Milk carton";
+        case bonesMatchImg: return "Bones";
+        case takeOutBoxMatchImg: return "Take-out box";
+        case takeOutBoxMatchImg: return "Take-out box"; // Chinese takeout
+        case pumpkinMatchImg: return "Pumpkin";
+        case leafMatchImg: return "Leaf";
+        case stickMatchImg: return "Stick";
+        case eggsMatchImg: return "Egg carton";
+        case paperCupMatchImg: return "Paper cup";
+        case newsPaperMatchImg: return "Newspaper";
+        case mailMatchImg: return "Mail";
+        case cardboardMatchImg: return "Cardboard";
+        case cerealMatchImg: return "Cereal box";
+        case paperBagMatchImg: return "Paper bag";
+        case papersMatchImg: return "Papers";
+        case paperRollMatchImg: return "Paper roll";
+        case bottleMatchImg: return "Plastic bottle";
+        case sodaCanMatchImg: return "Soda can";
+        case canMatchImg: return "Aluminum can";
+        case glassJarMatchImg: return "Glass jar";
+        case glassBottleMatchImg: return "Glass bottle";
+        case aluminumFoilMatchImg: return "Aluminum foil";
+        case juiceMatchImg: return "Juice box";
+        case coffeeLidMatchImg: return "Coffee lid";
+        case strawAndLidMatchImg: return "Straw and lid";
+        case chipsMatchImg: return "Chip bag";
+        case plasticBagMatchImg: return "Plastic bag";
+        case brokenPlateMatchImg: return "Broken plate";
+        case petWasteMatchImg: return "Pet waste";
+        case diaperMatchImg: return "Diaper";
+        case styrofoamMatchImg: return "Styrofoam";
+        case candyMatchImg: return "Candy wrapper";
+
+        // --- Default ---
+        default: return "Item";
+    }
 }
 
 // Main Game Loop
@@ -1516,6 +1680,8 @@ function draw()
 
         drawMainIntroScreen();
 
+        speak("Welcome to the Zero Waste game. Press P to continue. Press M to mute or unmute the background music. Press N to enable or disable narration.");
+
         changePlayButtonSize();
     }
     else if(currentState == state.WELCOME1)
@@ -1524,7 +1690,7 @@ function draw()
 
         drawWelcome1Screen();
 
-        speak("hi friends! i'm professor davis green. keeping waste out of landfills by recycling and composting is important.");
+        speak("hi friends! i'm professor davis green. keeping waste out of landfills by recycling and composting is important. Press P to continue.");
 
         changePlayButtonSize();
     }
@@ -1534,7 +1700,7 @@ function draw()
 
         drawWelcome2Screen();
         
-        speak("i need your help. will you help me divert waste from the landfill");
+        speak("i need your help. will you help me divert waste from the landfill? Press P to continue.");
 
         changePlayButtonSize();
     }
@@ -1544,7 +1710,7 @@ function draw()
 
         drawChooseGameScreen();
 
-        speak("play both games to learn about keeping waste out of land fills, press the left arrow for matching and the right arrow for sorting");
+        speak("play both games to learn about keeping waste out of land fills, click or press the left arrow for matching game or the right arrow for sorting game.");
        
         changeChooseButtonSize();
     }
@@ -1554,7 +1720,7 @@ function draw()
 
         drawMatchingIntro1();
 
-        speak("recology davis picks up all the trash, recycling and organics from davis");
+        speak("recology davis picks up all the trash, recycling and organics from davis. Press P to continue.");
 
         changePlayButtonSize();
     }
@@ -1564,7 +1730,7 @@ function draw()
 
         drawMatchingIntro2();
         
-        speak("recyclables are brought to the recycling center in davis. organics are sent to the composting facility at the yolo county landfill. trash is buried in the yolo county landfill.");
+        speak("recyclables are brought to the recycling center in davis. organics are sent to the composting facility at the yolo county landfill. trash is buried in the yolo county landfill. Press P to continue.");
 
         changePlayButtonSize();
     }
@@ -1574,7 +1740,7 @@ function draw()
 
         drawMatchingIntro3();
 
-        speak("click on two cards to find a match and learn which materials can be recycled and composted.");
+        speak("click on two cards to find a match and learn which materials can be recycled and composted. Press P to continue.");
 
         changePlayButtonSize();
     }
@@ -1584,7 +1750,7 @@ function draw()
 
         drawMatchingChooseLevelScreen();
 
-        speak("choose a level to start the game! click or use the arrow keys to move. press the space bar or enter to flip the cards.");
+        speak("choose a level to start the game! click or use the arrow keys to move. Press the space bar or enter key to flip the cards. To choose a level: click, or press 1 for level one, 2 for level two, and 3 for level three.");
 
         changeLevelButtonSize();
     }
@@ -1594,7 +1760,7 @@ function draw()
 
         drawSortingIntro1();
 
-        speak("in davis we sort waste into 4 differnt bins");
+        speak("in davis we sort waste into 4 differnt bins. Press P to continue.");
 
         changePlayButtonSize();
     }
@@ -1604,7 +1770,7 @@ function draw()
 
         drawSortingIntro2();
 
-        speak("sort the falling waste into the correct bin. see how much waste you can keep out of the landfill");
+        speak("sort the falling waste into the correct bin. see how much waste you can keep out of the landfill. Press P to continue.");
 
         changePlayButtonSize();
     }
@@ -1614,10 +1780,16 @@ function draw()
 
         drawSortingChooseLevelScreen();
 
+        speak("choose a level to start the game! To choose a level: click, or press 1 for level one, 2 for level two, and 3 for level three. Click and drag each item to the correct bin. Or use your keyboard: press Z for the paper bin, X for the commingled bin, C for the organics bin, and V for the landfill bin.");
+
         changeLevelButtonSize();
     }
     else if(currentState == state.PLAYMATCH)
     {
+        if (!matchIntroSpoken) {
+            speak("You are playing the matching game. To disable the timer, you can click the bar or press T.      Click or use the arrow keys to move. Press the space bar or enter key to flip the cards.     you can click or press Ecsape key to pause and unpause the screen. When the game is paused, you can click or press H to home page, R to restart the game, M to mute and unmute the background music.  Good luck!");
+            matchIntroSpoken = true;
+        }
         timer.update();
 
         if(!timer.isPaused() && !timer.isMatchDelayed() && !timer.isEndDelayed())
@@ -1644,7 +1816,7 @@ function draw()
         ctx.fillStyle = "#001F8E";
         ctx.textAlign = "center";
         const timerMsg = matchTimerEnabled
-            ? "Press T to disable the timer"
+            ? "Click the Bar or Press T to disable the timer"
             : "Timer Off";
         ctx.fillText(timerMsg, canvas.width / 2, 20);
         // ============================================
@@ -1672,6 +1844,10 @@ function draw()
             muteButton.y = soundButtonSize / 3.7;
             muteButton.size = soundButtonSize;
             drawMuteButton();
+            narrationButton.x = 20; 
+            narrationButton.y = canvas.height - narrationButton.size - 20;
+            narrationButton.size = 80; // smaller for gameplay
+            drawNarrationButton();
         }
 
         if(score == tiles.length * 50 / 2 && !timer.isMatchDelayed() && !timer.isEndDelayed())
@@ -1684,6 +1860,7 @@ function draw()
             }
 
             currentState = state.END;
+            endScreenSpoken = false;
 
             homeButton.x = canvas.width / 3 + originalPlayButtonSize / 2;
             homeButton.y = canvas.height / 2 + canvas.height / 4 - originalPlayButtonSize / 2;
@@ -1713,6 +1890,7 @@ function draw()
             }
 
             currentState = state.END;
+            endScreenSpoken = false;
 
             homeButton.x = canvas.width / 3 + originalPlayButtonSize / 2;
             homeButton.y = canvas.height / 2 + canvas.height / 4 - originalPlayButtonSize / 2;
@@ -1727,6 +1905,16 @@ function draw()
     }
     else if(currentState == state.PLAYSORT)
     {
+        if (!sortingIntroSpoken) {
+            speak("You are playing the sorting game. To disable the timer, click the circle timer or press T.       Click and drag each item to the correct bin. Or use your keyboard: press Z for paper, X for commingled, C for organics, and V for the landfill bin.    You can click or press Ecsape key to pause and unpause the screen. When the game is paused, you can click or press H to home page, R to restart the game, M to mute and unmute the background music.  Good luck!");
+            sortingIntroSpoken = true;
+        }
+
+        if (keyboardMode && activeGarbage && !activeGarbage.spoken) {
+            speak("The falling item now is " + getItemName(activeGarbage.image));
+            activeGarbage.spoken = true;
+        }
+
         timer.update();
 
         if(!timer.isPaused())
@@ -1786,6 +1974,7 @@ function draw()
             activeGarbage.y = -garbageSize;
             garbage.push(activeGarbage);
         }
+
         // Original mouse mode: keep multi-item spawn
         else if (!keyboardMode && timer.getRunTime() > lastDropTime && garbageQueue.length > 0 && !timer.isPaused()) {
             garbage.push(garbageQueue.pop());
@@ -1796,7 +1985,10 @@ function draw()
 
         drawSortingGame();
 
-        
+        narrationButton.x = soundButtonSize / 8;
+        narrationButton.y = soundButtonSize / 8;
+        narrationButton.size = soundButtonSize;
+        drawNarrationButton();
 
         if(timer.isPaused())
         {
@@ -1827,6 +2019,7 @@ function draw()
             }
 
             currentState = state.END;
+            endScreenSpoken = false;
 
             homeButton.x = canvas.width / 3 + originalPlayButtonSize / 2;
             homeButton.y = canvas.height / 2 + canvas.height / 4 - originalPlayButtonSize / 2;
@@ -1849,6 +2042,7 @@ function draw()
             }
 
             currentState = state.END;
+            endScreenSpoken = false;
 
             homeButton.x = canvas.width / 3 + originalPlayButtonSize / 2;
             homeButton.y = canvas.height / 2 + canvas.height / 4 - originalPlayButtonSize / 2;
@@ -1912,6 +2106,18 @@ function draw()
     else if(currentState == state.END)
     {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (narration && !endScreenSpoken) {
+            if (gameTitle == "matching") {
+                // Matching game: use points
+                speak("Good job! You got " + score + " points. Click, or Press H to go to the home page, or press R to restart the game.");
+            } else {
+                // Sorting game: use items sorted correctly
+                var correctItems = recyclingSorted + landfillSorted;
+                speak("Good job! You sorted " + correctItems + " of " + startingGarbageCount + " items correctly. Click, or Press H to go to the home page, or press R to restart the game.");
+            }
+            endScreenSpoken = true;
+        }
 
         drawEndGameScreen();
 

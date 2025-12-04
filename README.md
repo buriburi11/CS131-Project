@@ -33,3 +33,8 @@ We also added clear on-screen instructions to guide players through each game an
 In addition, we implemented a volume slider so players can easily adjust the sound level while playing.
 For our next sprint, we plan to make the game screen adjustable, so it can switch to full-screen mode. 
 And we might also add a brightness slider to make the visuals more comfortable for players.
+
+
+Sprint 5:
+In this sprint, we added a fully functional timer system to both games. Players can now choose how they want to play; they can keep the timer on for a challenge, or press T to disable it for a more relaxed experience.
+We also introduced screen reader feature to improve accessibility. Players can enable or disable narration at any time by clicking the narration button on the screen or by pressing N on the keyboard.

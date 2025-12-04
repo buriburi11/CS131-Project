@@ -32,6 +32,10 @@ function toggleAudio(x, y) {
         muted = false;
         muteButton.image = muteImg;
     }
+
+    if (narrationButton && narrationButton.clicked(x, y)) {
+        toggleNarration();
+    }
 }
 
 // Toggle with M key
@@ -55,6 +59,20 @@ function toggleMute() {
         }
 
         muteButton.image = muteImg;
+    }
+}
+
+function toggleNarration() {
+    // Flip the narration boolean (this variable already exists in globals.js)
+    narration = !narration;
+
+    if (!narration) {
+        // Turn OFF: stop any current speech and show the "off" icon
+        speechSynthesis.cancel();
+        narrationButton.image = narrationOffImg;
+    } else {
+        // Turn ON: just change icon
+        narrationButton.image = narrationOnImg;
     }
 }
 
@@ -129,3 +147,4 @@ createVolumeControl();
 // Make audio functions globally accessible
 window.toggleMute = toggleMute;
 window.setVolume = setVolume;
+window.toggleNarration = toggleNarration;

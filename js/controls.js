@@ -71,6 +71,13 @@ var muteButton = new CircularButton(
     muteImg
 );
 
+var narrationButton = new CircularButton(
+    canvas.width - soundButtonSize * 2 - soundButtonSize / 4, // a bit left of mute
+    soundButtonSize / 8,
+    soundButtonSize,
+    narrationOffImg   // start with narration OFF icon
+);
+
 // =====================
 // Button Animation Functions
 // =====================
@@ -233,6 +240,9 @@ function togglePause() {
             }
 
             timer.pause();
+            if (narration) {
+                speak("The game is paused. You can press Escape key to unpause the game. Press H to go to the home page. Press M to mute or unmute the background music. Press R to restart the game.");
+            }
             pauseButton.image = playButtonImg;
             pauseButton.x = canvas.width / 2 - originalPlayButtonSize * 2 - originalPlayButtonSize / 4;
             pauseButton.y = canvas.height / 2 - originalPlayButtonSize / 2 - originalPlayButtonSize / 8;
@@ -264,6 +274,9 @@ function togglePause() {
             }
 
             timer.pause();
+            if (narration) {
+                speak("The game is paused. You can press Escape key to unpause the game. Press H to go to the home page. Press M to mute or unmute the background music. Press R to restart the game.");
+            }
             pauseButton.image = playButtonImg;
             pauseButton.x = canvas.width / 2 - originalPlayButtonSize * 2 - originalPlayButtonSize / 4;
             pauseButton.y = canvas.height / 2 - originalPlayButtonSize / 2 - originalPlayButtonSize / 8;

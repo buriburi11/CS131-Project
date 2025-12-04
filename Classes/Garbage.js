@@ -9,6 +9,7 @@ class Garbage
 		this.type = type;
 
 		this.falling = true;
+		this.spoken = false;
   	}
 
   	clicked(x, y)

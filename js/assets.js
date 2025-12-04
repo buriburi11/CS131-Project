@@ -30,6 +30,9 @@ var level3Img = new Image();
 var restartButtonImg = new Image();
 var homeButtonImg = new Image();
 
+var narrationOnImg = new Image();
+var narrationOffImg = new Image();
+
 // Matching game items
 var bananaMatchImg = new Image();
 var bottleMatchImg = new Image();
@@ -176,6 +179,8 @@ function loadAssets() {
     track(level3Img, "Images/Buttons/level3.png");
     track(restartButtonImg, "Images/Buttons/restartButton.png");
     track(homeButtonImg, "Images/Buttons/homeButton.png");
+    track(narrationOnImg, "Images/Buttons/narrationOn.png");
+    track(narrationOffImg, "Images/Buttons/narrationOff.png");
 
     // =====================
     // Matching (Clear) Items
